@@ -1,0 +1,20 @@
+CREATE TABLE `user_profile` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`name` text,
+	`sex` text NOT NULL,
+	`date_of_birth` text NOT NULL,
+	`height_cm` real NOT NULL,
+	`weight_kg` real NOT NULL,
+	`goal` text NOT NULL,
+	`target_weight_kg` real,
+	`experience_level` text NOT NULL,
+	`days_per_week` integer NOT NULL,
+	`session_duration_min` integer NOT NULL,
+	`equipment_access` text NOT NULL,
+	`activity_level` text NOT NULL,
+	`injuries` text,
+	`dietary_preference` text NOT NULL,
+	`allergies` text,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL
+);

@@ -45,3 +45,30 @@ export const workoutProgram = sqliteTable('workout_program', {
 
 export type WorkoutProgramRow = typeof workoutProgram.$inferSelect;
 export type NewWorkoutProgramRow = typeof workoutProgram.$inferInsert;
+
+export const workoutSession = sqliteTable('workout_session', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  dayIndex: integer('day_index').notNull(),
+  focus: text('focus').notNull(),
+  status: text('status', { enum: ['in_progress', 'completed'] }).notNull(),
+  startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
+  completedAt: integer('completed_at', { mode: 'timestamp' }),
+});
+
+export type WorkoutSessionRow = typeof workoutSession.$inferSelect;
+export type NewWorkoutSessionRow = typeof workoutSession.$inferInsert;
+
+export const workoutSetLog = sqliteTable('workout_set_log', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  sessionId: integer('session_id').notNull(),
+  exerciseName: text('exercise_name').notNull(),
+  exerciseOrder: integer('exercise_order').notNull(),
+  setNumber: integer('set_number').notNull(),
+  reps: text('reps').notNull(),
+  weightKg: real('weight_kg'),
+  rpe: integer('rpe'),
+  completedAt: integer('completed_at', { mode: 'timestamp' }).notNull(),
+});
+
+export type WorkoutSetLogRow = typeof workoutSetLog.$inferSelect;
+export type NewWorkoutSetLogRow = typeof workoutSetLog.$inferInsert;

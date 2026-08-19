@@ -37,6 +37,15 @@ function AppNavigator() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={hasProfile}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="workout/[sessionId]"
+          options={{
+            headerShown: true,
+            title: 'Workout',
+            headerStyle: { backgroundColor: '#0B0F0D' },
+            headerTintColor: '#FFFFFF',
+          }}
+        />
       </Stack.Protected>
       <Stack.Protected guard={!hasProfile}>
         <Stack.Screen name="onboarding" />

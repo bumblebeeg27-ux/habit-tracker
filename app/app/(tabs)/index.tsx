@@ -1,14 +1,17 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../src/db/client';
 import { userProfile, workoutProgram as workoutProgramTable } from '../../src/db/schema';
 import { getActiveWorkoutProgram, saveWorkoutProgram } from '../../src/db/repositories/workoutProgram';
+import { startWorkoutSession } from '../../src/db/repositories/workoutSession';
 import { fetchWorkoutProgram } from '../../src/services/api';
 import { WorkoutProgram } from '../../src/types/workout';
 
 export default function TodayScreen() {
+  const router = useRouter();
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const { data: programRows } = useLiveQuery(db.select().from(workoutProgramTable));
   const profile = profiles?.[0];
@@ -23,6 +26,11 @@ export default function TodayScreen() {
       getActiveWorkoutProgram().then(setProgram);
     }
   }, [programRows]);
+
+  async function handleStartDay(day: WorkoutProgram['days'][number]) {
+    const sessionId = await startWorkoutSession(day);
+    router.push(`/workout/${sessionId}?dayIndex=${day.dayIndex}`);
+  }
 
   async function handleGenerate() {
     if (!profile || loading) return;
@@ -95,6 +103,9 @@ export default function TodayScreen() {
                 {exercise.notes ? <Text style={styles.exerciseNotes}>{exercise.notes}</Text> : null}
               </View>
             ))}
+            <Pressable style={styles.button} onPress={() => handleStartDay(day)}>
+              <Text style={styles.buttonText}>Start workout</Text>
+            </Pressable>
           </View>
         ))}
       </ScrollView>

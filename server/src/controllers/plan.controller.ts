@@ -5,14 +5,14 @@ import {
   workoutProgramToolSchema,
 } from '../schemas/workoutPlan.schema.js';
 import { buildWorkoutProgramPrompt } from '../services/promptBuilder.js';
-import { callClaudeTool } from '../services/claude.service.js';
+import { callGeminiTool } from '../services/gemini.service.js';
 
 export async function generateWorkoutPlan(req: Request, res: Response) {
   const { profile, priorSessionsSummary } = workoutPlanRequestSchema.parse(req.body);
   const { system, userMessage } = buildWorkoutProgramPrompt(profile, priorSessionsSummary);
 
   const toolCall = () =>
-    callClaudeTool({
+    callGeminiTool({
       system,
       userMessage,
       toolName: 'submit_workout_program',

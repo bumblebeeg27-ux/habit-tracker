@@ -4,18 +4,24 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../src/db/client';
-import { userProfile, workoutProgram as workoutProgramTable } from '../../src/db/schema';
+import { attendanceRecord, streakState, userProfile, workoutProgram as workoutProgramTable } from '../../src/db/schema';
 import { getActiveWorkoutProgram, saveWorkoutProgram } from '../../src/db/repositories/workoutProgram';
 import { startWorkoutSession } from '../../src/db/repositories/workoutSession';
+import { checkIn, todayDateString } from '../../src/db/repositories/attendance';
 import { fetchWorkoutProgram } from '../../src/services/api';
+import { setupNotifications, rescheduleStreakRiskNudge } from '../../src/services/notifications';
 import { WorkoutProgram } from '../../src/types/workout';
 
 export default function TodayScreen() {
   const router = useRouter();
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const { data: programRows } = useLiveQuery(db.select().from(workoutProgramTable));
+  const { data: attendanceRows } = useLiveQuery(db.select().from(attendanceRecord));
+  const { data: streakRows } = useLiveQuery(db.select().from(streakState));
   const profile = profiles?.[0];
   const hasActiveProgram = (programRows?.length ?? 0) > 0;
+  const checkedInToday = (attendanceRows ?? []).some((row) => row.date === todayDateString());
+  const streak = streakRows?.[0];
 
   const [program, setProgram] = useState<WorkoutProgram | null>(null);
   const [loading, setLoading] = useState(false);
@@ -26,6 +32,16 @@ export default function TodayScreen() {
       getActiveWorkoutProgram().then(setProgram);
     }
   }, [programRows]);
+
+  useEffect(() => {
+    if (profile) setupNotifications(checkedInToday);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!!profile]);
+
+  useEffect(() => {
+    if (profile) rescheduleStreakRiskNudge(checkedInToday);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkedInToday]);
 
   async function handleStartDay(day: WorkoutProgram['days'][number]) {
     const sessionId = await startWorkoutSession(day);
@@ -52,6 +68,24 @@ export default function TodayScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Today</Text>
+
+        <View style={styles.streakCard}>
+          <View>
+            <Text style={styles.streakValue}>🔥 {streak?.currentStreak ?? 0}</Text>
+            <Text style={styles.streakLabel}>
+              day streak · best {streak?.longestStreak ?? 0}
+            </Text>
+          </View>
+          {checkedInToday ? (
+            <View style={styles.checkedInBadge}>
+              <Text style={styles.checkedInBadgeText}>Checked in ✓</Text>
+            </View>
+          ) : (
+            <Pressable style={styles.checkInButton} onPress={() => checkIn()}>
+              <Text style={styles.checkInButtonText}>Check in</Text>
+            </Pressable>
+          )}
+        </View>
 
         {!hasActiveProgram && !loading && (
           <View style={styles.card}>
@@ -126,6 +160,49 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: '700',
     color: '#FFFFFF',
+  },
+  streakCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#1F2A24',
+    borderRadius: 14,
+    padding: 16,
+    backgroundColor: '#12181580',
+  },
+  streakValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  streakLabel: {
+    fontSize: 13,
+    color: '#8A8A8E',
+    marginTop: 2,
+  },
+  checkInButton: {
+    backgroundColor: '#22C55E',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+  },
+  checkInButtonText: {
+    color: '#04150B',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  checkedInBadge: {
+    borderWidth: 1.5,
+    borderColor: '#22C55E',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+  },
+  checkedInBadgeText: {
+    color: '#22C55E',
+    fontSize: 14,
+    fontWeight: '600',
   },
   card: {
     borderWidth: 1.5,

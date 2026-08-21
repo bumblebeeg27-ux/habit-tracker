@@ -2,6 +2,7 @@ import { desc, eq } from 'drizzle-orm';
 import { db } from '../client';
 import { workoutSession, workoutSetLog } from '../schema';
 import { WorkoutDay } from '../../types/workout';
+import { checkIn } from './attendance';
 
 export async function startWorkoutSession(day: WorkoutDay): Promise<number> {
   const [row] = await db
@@ -42,6 +43,7 @@ export async function completeWorkoutSession(sessionId: number): Promise<void> {
     .update(workoutSession)
     .set({ status: 'completed', completedAt: new Date() })
     .where(eq(workoutSession.id, sessionId));
+  await checkIn(sessionId);
 }
 
 export async function getSessionSetLogs(sessionId: number) {

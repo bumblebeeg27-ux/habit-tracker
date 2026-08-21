@@ -86,3 +86,25 @@ export const dietPlan = sqliteTable('diet_plan', {
 
 export type DietPlanRow = typeof dietPlan.$inferSelect;
 export type NewDietPlanRow = typeof dietPlan.$inferInsert;
+
+export const attendanceRecord = sqliteTable('attendance_record', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  date: text('date').notNull().unique(), // YYYY-MM-DD, local calendar day
+  checkedInAt: integer('checked_in_at', { mode: 'timestamp' }).notNull(),
+  workoutSessionId: integer('workout_session_id'),
+});
+
+export type AttendanceRecordRow = typeof attendanceRecord.$inferSelect;
+export type NewAttendanceRecordRow = typeof attendanceRecord.$inferInsert;
+
+// Single-row cache derived from attendanceRecord -- avoids recomputing the
+// streak from full history on every read.
+export const streakState = sqliteTable('streak_state', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  currentStreak: integer('current_streak').notNull().default(0),
+  longestStreak: integer('longest_streak').notNull().default(0),
+  lastCheckInDate: text('last_check_in_date'), // YYYY-MM-DD
+});
+
+export type StreakStateRow = typeof streakState.$inferSelect;
+export type NewStreakStateRow = typeof streakState.$inferInsert;

@@ -1,5 +1,6 @@
 import { UserProfile } from '../db/schema';
 import { WorkoutProgram } from '../types/workout';
+import { DietPlan } from '../types/diet';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const CLIENT_KEY = process.env.EXPO_PUBLIC_CLIENT_KEY;
@@ -39,4 +40,11 @@ export async function fetchWorkoutProgram(
     priorSessionsSummary,
   });
   return program;
+}
+
+export async function fetchDietPlan(profile: UserProfile): Promise<DietPlan> {
+  const { plan } = await post<{ plan: DietPlan }>('/api/plan/diet', {
+    profile: toProfilePayload(profile),
+  });
+  return plan;
 }

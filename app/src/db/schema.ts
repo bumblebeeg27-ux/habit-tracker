@@ -72,3 +72,17 @@ export const workoutSetLog = sqliteTable('workout_set_log', {
 
 export type WorkoutSetLogRow = typeof workoutSetLog.$inferSelect;
 export type NewWorkoutSetLogRow = typeof workoutSetLog.$inferInsert;
+
+export const dietPlan = sqliteTable('diet_plan', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  dailyCalories: integer('daily_calories').notNull(),
+  proteinG: integer('protein_g').notNull(),
+  carbsG: integer('carbs_g').notNull(),
+  fatG: integer('fat_g').notNull(),
+  planJson: text('plan_json').notNull(),
+  isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+export type DietPlanRow = typeof dietPlan.$inferSelect;
+export type NewDietPlanRow = typeof dietPlan.$inferInsert;

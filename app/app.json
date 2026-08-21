@@ -2,6 +2,7 @@
   "expo": {
     "name": "FitCoach AI",
     "slug": "fitcoach-ai",
+    "owner": "bumblebee27",
     "scheme": "fitcoachai",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,10 +10,12 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hari.fitcoachai"
+      "bundleIdentifier": "com.hari.fitcoachai",
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.hari.fitcoachai",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -28,6 +31,12 @@
       "expo-router",
       "expo-status-bar",
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e0984297-cc94-4c38-bc4d-1c82d775ee6d"
+      }
+    }
   }
 }

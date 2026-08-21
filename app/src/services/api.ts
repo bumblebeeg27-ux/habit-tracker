@@ -48,3 +48,16 @@ export async function fetchDietPlan(profile: UserProfile): Promise<DietPlan> {
   });
   return plan;
 }
+
+export async function sendChatMessage(
+  profile: UserProfile,
+  message: string,
+  recentHistory: { role: 'user' | 'model'; text: string }[],
+): Promise<string> {
+  const { reply } = await post<{ reply: string }>('/api/chat', {
+    profile: toProfilePayload(profile),
+    message,
+    recentHistory,
+  });
+  return reply;
+}

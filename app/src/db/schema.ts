@@ -108,3 +108,13 @@ export const streakState = sqliteTable('streak_state', {
 
 export type StreakStateRow = typeof streakState.$inferSelect;
 export type NewStreakStateRow = typeof streakState.$inferInsert;
+
+export const chatMessage = sqliteTable('chat_message', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  role: text('role', { enum: ['user', 'model'] }).notNull(),
+  content: text('content').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+export type ChatMessageRow = typeof chatMessage.$inferSelect;
+export type NewChatMessageRow = typeof chatMessage.$inferInsert;

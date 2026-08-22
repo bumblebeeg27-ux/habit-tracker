@@ -49,7 +49,9 @@ export default function DietScreen() {
           <View style={styles.card}>
             <Text style={styles.cardTitle}>No meal plan yet</Text>
             <Text style={styles.cardSubtitle}>
-              Your coach will build a {profile.dietaryPreference.replace(/_/g, ' ')} plan for {profile.goal.replace(/_/g, ' ')}.
+              Your coach will build
+              {profile.dietaryPreference === 'none' ? ' a' : ` a ${profile.dietaryPreference.replace(/_/g, ' ')}`} plan for{' '}
+              {profile.goal.replace(/_/g, ' ')}.
             </Text>
             <Pressable style={styles.button} onPress={handleGenerate}>
               <Text style={styles.buttonText}>Build my plan</Text>

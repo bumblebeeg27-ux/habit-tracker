@@ -55,6 +55,24 @@ function AppNavigator() {
             headerTintColor: '#FFFFFF',
           }}
         />
+        <Stack.Screen
+          name="edit-profile"
+          options={{
+            headerShown: true,
+            title: 'Edit profile',
+            headerStyle: { backgroundColor: '#0B0F0D' },
+            headerTintColor: '#FFFFFF',
+          }}
+        />
+        <Stack.Screen
+          name="insights"
+          options={{
+            headerShown: true,
+            title: 'Insights',
+            headerStyle: { backgroundColor: '#0B0F0D' },
+            headerTintColor: '#FFFFFF',
+          }}
+        />
       </Stack.Protected>
       <Stack.Protected guard={!hasProfile}>
         <Stack.Screen name="onboarding" />

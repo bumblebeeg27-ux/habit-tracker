@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm';
 import { db } from '../client';
 import { NewUserProfile, userProfile } from '../schema';
 
@@ -10,6 +11,13 @@ export async function createUserProfile(draft: ProfileDraft) {
     createdAt: now,
     updatedAt: now,
   });
+}
+
+export async function updateUserProfile(id: number, patch: Partial<ProfileDraft>) {
+  await db
+    .update(userProfile)
+    .set({ ...patch, updatedAt: new Date() })
+    .where(eq(userProfile.id, id));
 }
 
 export async function clearUserProfile() {

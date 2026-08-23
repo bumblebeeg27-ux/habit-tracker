@@ -1,0 +1,1 @@
+ALTER TABLE `workout_program` ADD `schedule_json` text;

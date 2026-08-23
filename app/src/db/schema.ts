@@ -39,6 +39,9 @@ export const workoutProgram = sqliteTable('workout_program', {
   durationWeeks: integer('duration_weeks').notNull(),
   daysPerWeek: integer('days_per_week').notNull(),
   planJson: text('plan_json').notNull(),
+  // Maps weekday (0=Sun..6=Sat) to a program dayIndex, or null for a rest
+  // day. Null until the user (or the default spread) sets one.
+  scheduleJson: text('schedule_json'),
   isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });

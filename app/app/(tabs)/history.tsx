@@ -1,11 +1,13 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
 import { desc, eq } from 'drizzle-orm';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../src/db/client';
 import { workoutSession, workoutSetLog } from '../../src/db/schema';
 
 export default function HistoryScreen() {
+  const router = useRouter();
   const { data: sessions } = useLiveQuery(
     db.select().from(workoutSession).where(eq(workoutSession.status, 'completed')).orderBy(desc(workoutSession.completedAt)),
   );
@@ -19,7 +21,12 @@ export default function HistoryScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>History</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>History</Text>
+          <Pressable onPress={() => router.push('/insights')}>
+            <Text style={styles.insightsLink}>Insights ›</Text>
+          </Pressable>
+        </View>
 
         {completedCount > 0 && (
           <View style={styles.statsRow}>
@@ -74,10 +81,20 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 16,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 26,
     fontWeight: '700',
     color: '#FFFFFF',
+  },
+  insightsLink: {
+    color: '#22C55E',
+    fontSize: 14,
+    fontWeight: '600',
   },
   statsRow: {
     flexDirection: 'row',

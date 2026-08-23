@@ -17,3 +17,6 @@ export type WorkoutProgram = {
   daysPerWeek: number;
   days: WorkoutDay[];
 };
+
+// Weekday (0=Sun..6=Sat) -> program dayIndex, or null for a rest day.
+export type WeeklySchedule = Record<number, number | null>;

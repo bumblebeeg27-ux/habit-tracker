@@ -70,12 +70,13 @@ export default function TodayScreen() {
         <Text style={styles.title}>Today</Text>
 
         <View style={styles.streakCard}>
-          <View>
+          <Pressable style={styles.streakInfo} onPress={() => router.push('/attendance-calendar')}>
             <Text style={styles.streakValue}>🔥 {streak?.currentStreak ?? 0}</Text>
             <Text style={styles.streakLabel}>
               day streak · best {streak?.longestStreak ?? 0}
             </Text>
-          </View>
+            <Text style={styles.calendarLink}>View calendar ›</Text>
+          </Pressable>
           {checkedInToday ? (
             <View style={styles.checkedInBadge}>
               <Text style={styles.checkedInBadgeText}>Checked in ✓</Text>
@@ -171,6 +172,9 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#12181580',
   },
+  streakInfo: {
+    flexShrink: 1,
+  },
   streakValue: {
     fontSize: 22,
     fontWeight: '700',
@@ -180,6 +184,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#8A8A8E',
     marginTop: 2,
+  },
+  calendarLink: {
+    fontSize: 12,
+    color: '#22C55E',
+    marginTop: 6,
+    fontWeight: '600',
   },
   checkInButton: {
     backgroundColor: '#22C55E',

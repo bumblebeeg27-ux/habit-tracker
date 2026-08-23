@@ -46,6 +46,15 @@ function AppNavigator() {
             headerTintColor: '#FFFFFF',
           }}
         />
+        <Stack.Screen
+          name="attendance-calendar"
+          options={{
+            headerShown: true,
+            title: 'Attendance',
+            headerStyle: { backgroundColor: '#0B0F0D' },
+            headerTintColor: '#FFFFFF',
+          }}
+        />
       </Stack.Protected>
       <Stack.Protected guard={!hasProfile}>
         <Stack.Screen name="onboarding" />

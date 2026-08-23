@@ -90,6 +90,7 @@ export type NewDietPlanRow = typeof dietPlan.$inferInsert;
 export const attendanceRecord = sqliteTable('attendance_record', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   date: text('date').notNull().unique(), // YYYY-MM-DD, local calendar day
+  status: text('status', { enum: ['present', 'absent'] }).notNull().default('present'),
   checkedInAt: integer('checked_in_at', { mode: 'timestamp' }).notNull(),
   workoutSessionId: integer('workout_session_id'),
 });

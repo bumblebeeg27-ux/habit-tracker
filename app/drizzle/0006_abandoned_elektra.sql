@@ -1,0 +1,1 @@
+ALTER TABLE `attendance_record` ADD `status` text DEFAULT 'present' NOT NULL;

@@ -13,7 +13,7 @@
       "distribution": "internal",
       "android": { "buildType": "apk" },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://192.168.86.102:4001",
+        "EXPO_PUBLIC_API_URL": "http://hariharasudhans-macbook-air.local:4001",
         "EXPO_PUBLIC_CLIENT_KEY": "85db57a4efcf7b32114b3f75c48755ea86869a92a7e333a4"
       }
     },

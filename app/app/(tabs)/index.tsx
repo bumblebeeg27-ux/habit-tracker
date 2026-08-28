@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DayPickerModal } from '../../src/components/DayPickerModal';
 import { ExerciseRow } from '../../src/components/ExerciseRow';
 import { db } from '../../src/db/client';
 import { attendanceRecord, streakState, userProfile, workoutProgram as workoutProgramTable } from '../../src/db/schema';
@@ -37,6 +38,7 @@ export default function TodayScreen() {
   const todayWeekday = new Date().getDay();
   const [selectedWeekday, setSelectedWeekday] = useState(todayWeekday);
   const [editingSchedule, setEditingSchedule] = useState(false);
+  const [pickerWeekday, setPickerWeekday] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,14 +83,17 @@ export default function TodayScreen() {
 
   function handleWeekdayPress(weekday: number) {
     if (editingSchedule && schedule && program) {
-      const current = schedule[weekday] ?? null;
-      const next = current === null ? 1 : current >= program.days.length ? null : current + 1;
-      const updated = { ...schedule, [weekday]: next };
-      setSchedule(updated);
-      saveWeeklySchedule(updated);
+      setPickerWeekday(weekday);
     } else {
       setSelectedWeekday(weekday);
     }
+  }
+
+  function handlePickDay(dayIndex: number | null) {
+    if (pickerWeekday === null || !schedule) return;
+    const updated = { ...schedule, [pickerWeekday]: dayIndex };
+    setSchedule(updated);
+    saveWeeklySchedule(updated);
   }
 
   if (!profile) return null;
@@ -159,7 +164,7 @@ export default function TodayScreen() {
               </Pressable>
             </View>
             {editingSchedule && (
-              <Text style={styles.editScheduleHint}>Tap a day to cycle through workout days, then rest.</Text>
+              <Text style={styles.editScheduleHint}>Tap a day to choose which workout runs on it.</Text>
             )}
             <View style={styles.weekdayRow}>
               {WEEKDAY_LABELS.map((label, w) => {
@@ -173,11 +178,13 @@ export default function TodayScreen() {
                       styles.weekdayChip,
                       isSelected && styles.weekdayChipSelected,
                       isToday && styles.weekdayChipToday,
+                      editingSchedule && styles.weekdayChipEditing,
                     ]}
                     onPress={() => handleWeekdayPress(w)}
                   >
                     <Text style={styles.weekdayLabel}>{label}</Text>
                     <Text style={styles.weekdayValue}>{dayIndex ? `D${dayIndex}` : 'Rest'}</Text>
+                    {editingSchedule && <Text style={styles.weekdayEditIcon}>✎</Text>}
                   </Pressable>
                 );
               })}
@@ -210,6 +217,17 @@ export default function TodayScreen() {
           </>
         )}
       </ScrollView>
+
+      {program && pickerWeekday !== null && (
+        <DayPickerModal
+          visible
+          weekday={pickerWeekday}
+          program={program}
+          currentDayIndex={schedule?.[pickerWeekday] ?? null}
+          onSelect={handlePickDay}
+          onClose={() => setPickerWeekday(null)}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -358,6 +376,9 @@ const styles = StyleSheet.create({
   weekdayChipToday: {
     borderColor: '#22C55E',
   },
+  weekdayChipEditing: {
+    borderStyle: 'dashed',
+  },
   weekdayLabel: {
     color: '#8A8A8E',
     fontSize: 12,
@@ -367,5 +388,10 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 11,
     marginTop: 4,
+  },
+  weekdayEditIcon: {
+    color: '#5B655F',
+    fontSize: 10,
+    marginTop: 3,
   },
 });

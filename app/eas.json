@@ -13,8 +13,8 @@
       "distribution": "internal",
       "android": { "buildType": "apk" },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://hariharasudhans-macbook-air.local:4001",
-        "EXPO_PUBLIC_CLIENT_KEY": "85db57a4efcf7b32114b3f75c48755ea86869a92a7e333a4"
+        "EXPO_PUBLIC_API_URL": "https://fitcoach-api-05v5.onrender.com",
+        "EXPO_PUBLIC_CLIENT_KEY": "3e5e12de32dd976bbda8bd1d2da033af2d92381a86460544"
       }
     },
     "production": {

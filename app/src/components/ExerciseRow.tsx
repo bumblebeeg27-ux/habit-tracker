@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Exercise } from '../types/workout';
+import { findExerciseImageUrl } from '../utils/exerciseImage';
 
 export function ExerciseRow({
   exercise,
@@ -13,6 +14,10 @@ export function ExerciseRow({
   const [sets, setSets] = useState(String(exercise.sets));
   const [reps, setReps] = useState(exercise.reps);
   const [restSec, setRestSec] = useState(String(exercise.restSec));
+  const [imageExpanded, setImageExpanded] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageFailed, setImageFailed] = useState(false);
+  const imageUrl = useMemo(() => findExerciseImageUrl(exercise.name), [exercise.name]);
 
   function handleDone() {
     onSave({
@@ -21,11 +26,6 @@ export function ExerciseRow({
       restSec: Number(restSec) || exercise.restSec,
     });
     setEditing(false);
-  }
-
-  function openVideo() {
-    const query = encodeURIComponent(`${exercise.name} exercise proper form`);
-    Linking.openURL(`https://www.youtube.com/results?search_query=${query}`);
   }
 
   if (editing) {
@@ -67,20 +67,41 @@ export function ExerciseRow({
   return (
     <View style={styles.row}>
       <View style={styles.headerRow}>
-        <Text style={styles.name}>{exercise.name}</Text>
-        <View style={styles.actions}>
-          <Pressable style={styles.actionButton} onPress={openVideo}>
-            <Text style={styles.actionIcon}>▶</Text>
-          </Pressable>
-          <Pressable style={styles.actionButton} onPress={() => setEditing(true)}>
-            <Text style={styles.actionIcon}>✎</Text>
-          </Pressable>
+        <Pressable
+          style={styles.thumbnail}
+          disabled={!imageUrl}
+          onPress={() => setImageExpanded((e) => !e)}
+        >
+          {imageUrl && !imageFailed ? (
+            <>
+              <Image
+                source={{ uri: imageUrl }}
+                style={styles.thumbnailImage}
+                onLoadEnd={() => setImageLoading(false)}
+                onError={() => setImageFailed(true)}
+              />
+              {imageLoading && (
+                <ActivityIndicator size="small" color="#7C8A78" style={StyleSheet.absoluteFill} />
+              )}
+            </>
+          ) : (
+            <Text style={styles.thumbnailFallback}>{exercise.name.slice(0, 1)}</Text>
+          )}
+        </Pressable>
+        <View style={styles.headerText}>
+          <Text style={styles.name}>{exercise.name}</Text>
+          <Text style={styles.meta}>
+            {exercise.sets} × {exercise.reps} · rest {exercise.restSec}s
+          </Text>
         </View>
+        <Pressable style={styles.actionButton} onPress={() => setEditing(true)}>
+          <Text style={styles.actionIcon}>✎</Text>
+        </Pressable>
       </View>
-      <Text style={styles.meta}>
-        {exercise.sets} × {exercise.reps} · rest {exercise.restSec}s
-      </Text>
       {exercise.notes ? <Text style={styles.notes}>{exercise.notes}</Text> : null}
+      {imageExpanded && imageUrl && !imageFailed && (
+        <Image source={{ uri: imageUrl }} style={styles.expandedImage} resizeMode="contain" />
+      )}
     </View>
   );
 }
@@ -93,18 +114,36 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 10,
+  },
+  thumbnail: {
+    width: 48,
+    height: 48,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#1C2318',
+    backgroundColor: '#0A0F0C',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  thumbnailImage: {
+    width: '100%',
+    height: '100%',
+  },
+  thumbnailFallback: {
+    color: '#5C6658',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  headerText: {
+    flex: 1,
   },
   name: {
     color: '#EAFFEF',
     fontSize: 15,
     fontWeight: '600',
-    flexShrink: 1,
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: 8,
   },
   actionButton: {
     width: 28,
@@ -123,6 +162,13 @@ const styles = StyleSheet.create({
     color: '#7C8A78',
     fontSize: 13,
     marginTop: 2,
+  },
+  expandedImage: {
+    width: '100%',
+    height: 220,
+    borderRadius: 12,
+    marginTop: 10,
+    backgroundColor: '#0A0F0C',
   },
   notes: {
     color: '#5C6658',

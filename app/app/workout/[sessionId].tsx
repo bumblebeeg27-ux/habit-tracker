@@ -4,7 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LabeledInput } from '../../src/components/LabeledInput';
 import { getActiveWorkoutProgram } from '../../src/db/repositories/workoutProgram';
-import { completeWorkoutSession, logSet } from '../../src/db/repositories/workoutSession';
+import { completeWorkoutSession, getLastLogForExercise, logSet } from '../../src/db/repositories/workoutSession';
 import { WorkoutDay } from '../../src/types/workout';
 
 type Phase = 'loading' | 'logging' | 'resting' | 'complete';
@@ -20,6 +20,7 @@ export default function WorkoutSessionScreen() {
   const [reps, setReps] = useState('');
   const [weightKg, setWeightKg] = useState('');
   const [restRemaining, setRestRemaining] = useState(0);
+  const [lastLog, setLastLog] = useState<{ reps: string; weightKg: number | null } | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -32,6 +33,14 @@ export default function WorkoutSessionScreen() {
       }
     });
   }, [dayIndex]);
+
+  useEffect(() => {
+    if (!day) return;
+    const exerciseName = day.exercises[exerciseIndex]?.name;
+    if (!exerciseName) return;
+    setLastLog(null);
+    getLastLogForExercise(exerciseName, Number(sessionId)).then(setLastLog);
+  }, [day, exerciseIndex, sessionId]);
 
   useEffect(() => {
     if (phase !== 'resting') return;
@@ -143,6 +152,12 @@ export default function WorkoutSessionScreen() {
           Set {setNumber} of {exercise.sets} · target {exercise.reps}
           {exercise.notes ? ` · ${exercise.notes}` : ''}
         </Text>
+        {lastLog && (
+          <Text style={styles.lastTime}>
+            Last time: {lastLog.reps}
+            {lastLog.weightKg ? ` @ ${lastLog.weightKg}kg` : ''}
+          </Text>
+        )}
 
         <LabeledInput
           label="Reps completed"
@@ -197,6 +212,11 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 15,
     color: '#7C8A78',
+    marginTop: 8,
+  },
+  lastTime: {
+    fontSize: 13,
+    color: '#B6FF3C',
     marginTop: 8,
   },
   timer: {

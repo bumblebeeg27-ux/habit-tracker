@@ -1,10 +1,29 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
 import { desc, eq } from 'drizzle-orm';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../src/db/client';
-import { workoutSession, workoutSetLog } from '../../src/db/schema';
+import { workoutSession, workoutSetLog, WorkoutSetLogRow } from '../../src/db/schema';
+
+function groupSetsByExercise(sets: WorkoutSetLogRow[]) {
+  const byExercise = new Map<string, { order: number; sets: WorkoutSetLogRow[] }>();
+  for (const set of sets) {
+    const existing = byExercise.get(set.exerciseName);
+    if (existing) {
+      existing.sets.push(set);
+    } else {
+      byExercise.set(set.exerciseName, { order: set.exerciseOrder, sets: [set] });
+    }
+  }
+  return Array.from(byExercise.entries())
+    .sort((a, b) => a[1].order - b[1].order)
+    .map(([name, { sets }]) => ({
+      name,
+      sets: sets.sort((a, b) => a.setNumber - b.setNumber),
+    }));
+}
 
 export default function HistoryScreen() {
   const router = useRouter();
@@ -12,6 +31,7 @@ export default function HistoryScreen() {
     db.select().from(workoutSession).where(eq(workoutSession.status, 'completed')).orderBy(desc(workoutSession.completedAt)),
   );
   const { data: allSetLogs } = useLiveQuery(db.select().from(workoutSetLog));
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const completedCount = sessions?.length ?? 0;
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
@@ -50,20 +70,50 @@ export default function HistoryScreen() {
         ) : (
           sessions!.map((session) => {
             const sets = (allSetLogs ?? []).filter((log) => log.sessionId === session.id);
-            const exerciseCount = new Set(sets.map((s) => s.exerciseName)).size;
+            const exercises = groupSetsByExercise(sets);
+            const isExpanded = expandedId === session.id;
             return (
-              <View key={session.id} style={styles.card}>
-                <Text style={styles.cardTitle}>{session.focus}</Text>
-                <Text style={styles.cardSubtitle}>
-                  {session.completedAt?.toLocaleDateString(undefined, {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                  {' · '}
-                  {exerciseCount} exercises · {sets.length} sets
-                </Text>
-              </View>
+              <Pressable
+                key={session.id}
+                style={styles.card}
+                onPress={() => setExpandedId(isExpanded ? null : session.id)}
+              >
+                <View style={styles.cardHeaderRow}>
+                  <View style={styles.cardHeaderText}>
+                    <Text style={styles.cardTitle}>{session.focus}</Text>
+                    <Text style={styles.cardSubtitle}>
+                      {session.completedAt?.toLocaleDateString(undefined, {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                      {' · '}
+                      {exercises.length} exercises · {sets.length} sets
+                    </Text>
+                  </View>
+                  <Text style={styles.chevron}>{isExpanded ? '︿' : '﹀'}</Text>
+                </View>
+
+                {isExpanded && (
+                  <View style={styles.detail}>
+                    {exercises.map((ex) => (
+                      <View key={ex.name} style={styles.exerciseBlock}>
+                        <Text style={styles.exerciseName}>{ex.name}</Text>
+                        <View style={styles.setsRow}>
+                          {ex.sets.map((set) => (
+                            <View key={set.id} style={styles.setChip}>
+                              <Text style={styles.setChipText}>
+                                {set.reps}
+                                {set.weightKg ? ` · ${set.weightKg}kg` : ''}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </Pressable>
             );
           })
         )}
@@ -124,8 +174,20 @@ const styles = StyleSheet.create({
     borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
-    gap: 6,
     backgroundColor: '#0A0F0C80',
+  },
+  cardHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  cardHeaderText: {
+    flex: 1,
+    gap: 6,
+  },
+  chevron: {
+    color: '#5C6658',
+    fontSize: 13,
   },
   cardTitle: {
     fontSize: 16,
@@ -140,5 +202,36 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7C8A78',
     lineHeight: 20,
+  },
+  detail: {
+    marginTop: 14,
+    paddingTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#1C2318',
+    gap: 12,
+  },
+  exerciseBlock: {
+    gap: 6,
+  },
+  exerciseName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#EAFFEF',
+  },
+  setsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  setChip: {
+    borderWidth: 1,
+    borderColor: '#1C2318',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  setChipText: {
+    color: '#7C8A78',
+    fontSize: 12,
   },
 });

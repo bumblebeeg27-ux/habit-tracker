@@ -54,6 +54,22 @@ export async function getSessionSetLogs(sessionId: number) {
     .orderBy(workoutSetLog.exerciseOrder, workoutSetLog.setNumber);
 }
 
+export async function getLastLogForExercise(
+  exerciseName: string,
+  excludeSessionId: number,
+): Promise<{ reps: string; weightKg: number | null } | null> {
+  const rows = await db
+    .select()
+    .from(workoutSetLog)
+    .where(eq(workoutSetLog.exerciseName, exerciseName))
+    .orderBy(desc(workoutSetLog.completedAt))
+    .limit(20);
+
+  const mostRecent = rows.find((row) => row.sessionId !== excludeSessionId);
+  if (!mostRecent) return null;
+  return { reps: mostRecent.reps, weightKg: mostRecent.weightKg ?? null };
+}
+
 export async function getCompletedSessions() {
   return db
     .select()

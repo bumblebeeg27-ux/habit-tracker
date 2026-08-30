@@ -1,6 +1,16 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../client';
-import { NewUserProfile, userProfile } from '../schema';
+import {
+  attendanceRecord,
+  chatMessage,
+  dietPlan,
+  NewUserProfile,
+  streakState,
+  userProfile,
+  workoutProgram,
+  workoutSession,
+  workoutSetLog,
+} from '../schema';
 
 export type ProfileDraft = Omit<NewUserProfile, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -20,6 +30,13 @@ export async function updateUserProfile(id: number, patch: Partial<ProfileDraft>
     .where(eq(userProfile.id, id));
 }
 
-export async function clearUserProfile() {
+export async function clearAllData() {
+  await db.delete(chatMessage);
+  await db.delete(workoutSetLog);
+  await db.delete(workoutSession);
+  await db.delete(workoutProgram);
+  await db.delete(dietPlan);
+  await db.delete(attendanceRecord);
+  await db.delete(streakState);
   await db.delete(userProfile);
 }

@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../src/db/client';
-import { clearUserProfile } from '../../src/db/repositories/userProfile';
+import { clearAllData } from '../../src/db/repositories/userProfile';
 import { userProfile } from '../../src/db/schema';
 
 export default function ProfileScreen() {
@@ -14,10 +14,10 @@ export default function ProfileScreen() {
   function handleClearData() {
     Alert.alert(
       'Clear all data?',
-      'This deletes your profile from this device. This cannot be undone.',
+      'This deletes your profile, workout history, diet plan, attendance, and coach chat from this device. This cannot be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Clear data', style: 'destructive', onPress: () => clearUserProfile() },
+        { text: 'Clear data', style: 'destructive', onPress: () => clearAllData() },
       ],
     );
   }

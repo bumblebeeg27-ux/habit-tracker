@@ -13,7 +13,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       {error ? (
         <View style={styles.center}>
           <Text style={styles.errorText}>Database error: {error.message}</Text>
@@ -42,8 +42,8 @@ function AppNavigator() {
           options={{
             headerShown: true,
             title: 'Workout',
-            headerStyle: { backgroundColor: '#0B0F0D' },
-            headerTintColor: '#FFFFFF',
+            headerStyle: { backgroundColor: '#05070A' },
+            headerTintColor: '#EAFFEF',
           }}
         />
         <Stack.Screen
@@ -51,8 +51,8 @@ function AppNavigator() {
           options={{
             headerShown: true,
             title: 'Attendance',
-            headerStyle: { backgroundColor: '#0B0F0D' },
-            headerTintColor: '#FFFFFF',
+            headerStyle: { backgroundColor: '#05070A' },
+            headerTintColor: '#EAFFEF',
           }}
         />
         <Stack.Screen
@@ -60,8 +60,8 @@ function AppNavigator() {
           options={{
             headerShown: true,
             title: 'Edit profile',
-            headerStyle: { backgroundColor: '#0B0F0D' },
-            headerTintColor: '#FFFFFF',
+            headerStyle: { backgroundColor: '#05070A' },
+            headerTintColor: '#EAFFEF',
           }}
         />
         <Stack.Screen
@@ -69,8 +69,8 @@ function AppNavigator() {
           options={{
             headerShown: true,
             title: 'Insights',
-            headerStyle: { backgroundColor: '#0B0F0D' },
-            headerTintColor: '#FFFFFF',
+            headerStyle: { backgroundColor: '#05070A' },
+            headerTintColor: '#EAFFEF',
           }}
         />
       </Stack.Protected>
@@ -86,10 +86,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   loadingText: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 15,
   },
   errorText: {

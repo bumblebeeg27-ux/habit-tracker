@@ -15,7 +15,7 @@ export function ScreenPlaceholder({ title, subtitle }: { title: string; subtitle
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     flex: 1,
@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     textAlign: 'center',
   },
 });

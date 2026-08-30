@@ -61,7 +61,7 @@ export default function DietScreen() {
 
         {loading && (
           <View style={styles.card}>
-            <ActivityIndicator color="#22C55E" />
+            <ActivityIndicator color="#B6FF3C" />
             <Text style={[styles.cardSubtitle, styles.loadingText]}>Building your plan…</Text>
           </View>
         )}
@@ -121,7 +121,7 @@ function MacroStat({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -130,38 +130,38 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   card: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
     gap: 8,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   cardTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   cardSubtitle: {
     fontSize: 14,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     lineHeight: 20,
   },
   loadingText: {
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
   },
   buttonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -172,10 +172,10 @@ const styles = StyleSheet.create({
   },
   macroCard: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   macroRow: {
     flexDirection: 'row',
@@ -185,25 +185,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   macroValue: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontSize: 20,
     fontWeight: '700',
   },
   macroLabel: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 12,
     marginTop: 2,
   },
   regenerateButton: {
     marginTop: 16,
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
   },
   regenerateButtonText: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -213,11 +213,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mealCalories: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 13,
   },
   mealItem: {
-    color: '#C7CCC9',
+    color: '#B9C4B2',
     fontSize: 14,
     lineHeight: 20,
   },

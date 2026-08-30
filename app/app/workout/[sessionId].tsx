@@ -170,7 +170,7 @@ export default function WorkoutSessionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   progress: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 13,
     fontWeight: '600',
     textTransform: 'uppercase',
@@ -191,27 +191,27 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     marginTop: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 8,
   },
   timer: {
     fontSize: 64,
     fontWeight: '700',
-    color: '#22C55E',
+    color: '#B6FF3C',
   },
   button: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 17,
     fontWeight: '700',
   },

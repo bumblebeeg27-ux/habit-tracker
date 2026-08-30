@@ -82,28 +82,28 @@ function SummaryRow({ label, value }: { label: string; value?: string }) {
 const styles = StyleSheet.create({
   summaryCard: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
     gap: 12,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   rowLabel: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 14,
   },
   rowValue: {
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 14,
     fontWeight: '600',
     textTransform: 'capitalize',
   },
   consent: {
-    color: '#5B655F',
+    color: '#5C6658',
     fontSize: 12,
     lineHeight: 17,
     marginTop: 20,

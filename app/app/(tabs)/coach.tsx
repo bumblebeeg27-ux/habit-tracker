@@ -85,7 +85,7 @@ export default function CoachScreen() {
           ))}
           {sending && (
             <View style={[styles.bubble, styles.modelBubble]}>
-              <ActivityIndicator color="#8A8A8E" />
+              <ActivityIndicator color="#7C8A78" />
             </View>
           )}
           {error && <Text style={styles.errorText}>{error}</Text>}
@@ -95,7 +95,7 @@ export default function CoachScreen() {
           <TextInput
             style={styles.input}
             placeholder="Ask your coach…"
-            placeholderTextColor="#5B655F"
+            placeholderTextColor="#5C6658"
             value={input}
             onChangeText={setInput}
             multiline
@@ -116,7 +116,7 @@ export default function CoachScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   header: {
     paddingHorizontal: 24,
@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   disclaimer: {
     fontSize: 12,
-    color: '#5B655F',
+    color: '#5C6658',
     marginTop: 4,
   },
   messages: {
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     lineHeight: 20,
     marginTop: 24,
   },
@@ -151,18 +151,18 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     alignSelf: 'flex-end',
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
   },
   modelBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
   },
   bubbleText: {
     fontSize: 15,
     lineHeight: 21,
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   errorText: {
     color: '#F87171',
@@ -176,22 +176,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: '#1F2A24',
+    borderTopColor: '#1C2318',
   },
   input: {
     flex: 1,
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 15,
     maxHeight: 100,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   sendButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   sendButtonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 14,
     fontWeight: '700',
   },

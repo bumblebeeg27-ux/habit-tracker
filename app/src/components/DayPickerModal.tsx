@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#12181F',
+    backgroundColor: '#0A0F0C',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 10,
@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#3A423E',
+    backgroundColor: '#2A3324',
     alignSelf: 'center',
     marginBottom: 16,
   },
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     marginBottom: 12,
   },
   list: {
@@ -117,14 +117,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 14,
     marginBottom: 10,
   },
   optionSelected: {
-    borderColor: '#22C55E',
-    backgroundColor: '#16321F',
+    borderColor: '#B6FF3C',
+    backgroundColor: '#1A2A0F',
   },
   optionText: {
     flexShrink: 1,
@@ -132,18 +132,18 @@ const styles = StyleSheet.create({
   optionLabel: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   optionLabelSelected: {
-    color: '#4ADE80',
+    color: '#CFFF7A',
   },
   optionSubtitle: {
     fontSize: 13,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 2,
   },
   checkmark: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontSize: 18,
     fontWeight: '700',
     marginLeft: 12,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 15,
     fontWeight: '600',
   },

@@ -209,7 +209,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -219,24 +219,24 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   sectionTitle: {
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 17,
     fontWeight: '700',
   },
   subLabel: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 13,
     fontWeight: '600',
   },
   saveButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
   },
   saveButtonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 17,
     fontWeight: '700',
   },

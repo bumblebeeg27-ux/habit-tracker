@@ -75,7 +75,7 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -89,10 +89,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   insightsLink: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -103,42 +103,42 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
     alignItems: 'center',
   },
   statValue: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#22C55E',
+    color: '#B6FF3C',
   },
   statLabel: {
     fontSize: 12,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 4,
   },
   card: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
     gap: 6,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   cardSubtitle: {
     fontSize: 13,
-    color: '#8A8A8E',
+    color: '#7C8A78',
   },
   emptyText: {
     fontSize: 14,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     lineHeight: 20,
   },
 });

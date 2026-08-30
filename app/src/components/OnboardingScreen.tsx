@@ -52,7 +52,7 @@ export function OnboardingScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   progressRow: {
     flexDirection: 'row',
@@ -64,10 +64,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#1F2A24',
+    backgroundColor: '#1C2318',
   },
   progressDotActive: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
   },
   content: {
     padding: 24,
@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     marginTop: 12,
   },
   subtitle: {
     fontSize: 15,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 8,
     lineHeight: 21,
   },
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   button: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   buttonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 17,
     fontWeight: '700',
   },

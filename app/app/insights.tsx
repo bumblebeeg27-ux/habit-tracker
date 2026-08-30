@@ -98,7 +98,7 @@ export default function InsightsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyText: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,
@@ -123,51 +123,51 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
     alignItems: 'center',
   },
   statValue: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#22C55E',
+    color: '#B6FF3C',
   },
   statValueWarn: {
     color: '#F87171',
   },
   statLabel: {
     fontSize: 12,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 4,
     textAlign: 'center',
   },
   card: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
     gap: 10,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   cardTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   cardBody: {
     fontSize: 14,
-    color: '#C7CCC9',
+    color: '#B9C4B2',
     lineHeight: 21,
   },
   highlight: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontWeight: '700',
   },
   disclaimer: {
     fontSize: 12,
-    color: '#5B655F',
+    color: '#5C6658',
     marginTop: 4,
     fontStyle: 'italic',
   },

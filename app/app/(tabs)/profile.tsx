@@ -86,7 +86,7 @@ function Row({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -101,14 +101,14 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#16321F',
+    backgroundColor: '#1A2A0F',
     borderWidth: 1.5,
-    borderColor: '#22C55E',
+    borderColor: '#B6FF3C',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
-    color: '#4ADE80',
+    color: '#CFFF7A',
     fontSize: 22,
     fontWeight: '700',
   },
@@ -118,23 +118,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   subtitle: {
     fontSize: 13,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 2,
     textTransform: 'capitalize',
   },
   editButton: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
   editButtonText: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   sectionTitle: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 12,
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -150,11 +150,11 @@ const styles = StyleSheet.create({
   },
   card: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
     gap: 12,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   row: {
     flexDirection: 'row',
@@ -162,11 +162,11 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   rowLabel: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 14,
   },
   rowValue: {
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 14,
     fontWeight: '600',
     textTransform: 'capitalize',

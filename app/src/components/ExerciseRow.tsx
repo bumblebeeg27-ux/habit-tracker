@@ -39,14 +39,14 @@ export function ExerciseRow({
             onChangeText={setSets}
             keyboardType="number-pad"
             placeholder="Sets"
-            placeholderTextColor="#5B655F"
+            placeholderTextColor="#5C6658"
           />
           <TextInput
             style={styles.miniInput}
             value={reps}
             onChangeText={setReps}
             placeholder="Reps"
-            placeholderTextColor="#5B655F"
+            placeholderTextColor="#5C6658"
           />
           <TextInput
             style={styles.miniInput}
@@ -54,7 +54,7 @@ export function ExerciseRow({
             onChangeText={setRestSec}
             keyboardType="number-pad"
             placeholder="Rest s"
-            placeholderTextColor="#5B655F"
+            placeholderTextColor="#5C6658"
           />
           <Pressable style={styles.doneChip} onPress={handleDone}>
             <Text style={styles.doneChipText}>✓</Text>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   row: {
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#1F2A24',
+    borderTopColor: '#1C2318',
   },
   headerRow: {
     flexDirection: 'row',
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   name: {
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 15,
     fontWeight: '600',
     flexShrink: 1,
@@ -111,21 +111,21 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     alignItems: 'center',
     justifyContent: 'center',
   },
   actionIcon: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 12,
   },
   meta: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 13,
     marginTop: 2,
   },
   notes: {
-    color: '#5B655F',
+    color: '#5C6658',
     fontSize: 12,
     marginTop: 2,
     fontStyle: 'italic',
@@ -139,24 +139,24 @@ const styles = StyleSheet.create({
   miniInput: {
     flex: 1,
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 6,
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 13,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   doneChip: {
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     alignItems: 'center',
     justifyContent: 'center',
   },
   doneChipText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontWeight: '700',
   },
 });

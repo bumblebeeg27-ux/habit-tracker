@@ -38,26 +38,26 @@ const styles = StyleSheet.create({
   },
   option: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   optionSelected: {
-    borderColor: '#22C55E',
-    backgroundColor: '#16321F',
+    borderColor: '#B6FF3C',
+    backgroundColor: '#1A2A0F',
   },
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   labelSelected: {
-    color: '#4ADE80',
+    color: '#CFFF7A',
   },
   description: {
     fontSize: 13,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 4,
   },
 });

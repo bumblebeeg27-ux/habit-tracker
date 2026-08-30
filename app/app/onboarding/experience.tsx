@@ -45,7 +45,7 @@ export default function ExperienceScreen() {
         value={draft.experienceLevel}
         onChange={(experienceLevel) => update({ experienceLevel })}
       />
-      <Text style={{ color: '#8A8A8E', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: '#7C8A78', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         HOW OFTEN CAN YOU TRAIN?
       </Text>
       <OptionPicker
@@ -53,7 +53,7 @@ export default function ExperienceScreen() {
         value={draft.daysPerWeek ? String(draft.daysPerWeek) : undefined}
         onChange={(value) => update({ daysPerWeek: Number(value) })}
       />
-      <Text style={{ color: '#8A8A8E', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: '#7C8A78', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         HOW LONG PER SESSION?
       </Text>
       <OptionPicker

@@ -69,7 +69,7 @@ export default function BodyStatsScreen() {
         onChangeText={(text) => update({ weightKg: Number(text) || undefined })}
         containerStyle={{ marginTop: 16 }}
       />
-      <Text style={{ color: '#8A8A8E', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: '#7C8A78', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         DAILY ACTIVITY LEVEL
       </Text>
       <OptionPicker

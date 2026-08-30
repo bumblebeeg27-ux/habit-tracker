@@ -139,7 +139,7 @@ export default function TodayScreen() {
 
         {loading && (
           <View style={styles.card}>
-            <ActivityIndicator color="#22C55E" />
+            <ActivityIndicator color="#B6FF3C" />
             <Text style={[styles.cardSubtitle, styles.loadingText]}>Building your program…</Text>
           </View>
         )}
@@ -235,7 +235,7 @@ export default function TodayScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F0D',
+    backgroundColor: '#05070A',
   },
   content: {
     padding: 24,
@@ -244,17 +244,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   streakCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   streakInfo: {
     flexShrink: 1,
@@ -262,72 +262,72 @@ const styles = StyleSheet.create({
   streakValue: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   streakLabel: {
     fontSize: 13,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     marginTop: 2,
   },
   calendarLink: {
     fontSize: 12,
-    color: '#22C55E',
+    color: '#B6FF3C',
     marginTop: 6,
     fontWeight: '600',
   },
   checkInButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 12,
     paddingVertical: 10,
     paddingHorizontal: 18,
   },
   checkInButtonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 14,
     fontWeight: '700',
   },
   checkedInBadge: {
     borderWidth: 1.5,
-    borderColor: '#22C55E',
+    borderColor: '#B6FF3C',
     borderRadius: 12,
     paddingVertical: 10,
     paddingHorizontal: 14,
   },
   checkedInBadgeText: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontSize: 14,
     fontWeight: '600',
   },
   card: {
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
     borderRadius: 14,
     padding: 16,
     gap: 8,
-    backgroundColor: '#12181580',
+    backgroundColor: '#0A0F0C80',
   },
   cardTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#EAFFEF',
   },
   cardSubtitle: {
     fontSize: 14,
-    color: '#8A8A8E',
+    color: '#7C8A78',
     lineHeight: 20,
   },
   loadingText: {
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#B6FF3C',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
   },
   buttonText: {
-    color: '#04150B',
+    color: '#0A1400',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -343,16 +343,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   weekTitle: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 13,
   },
   editScheduleLink: {
-    color: '#22C55E',
+    color: '#B6FF3C',
     fontSize: 13,
     fontWeight: '600',
   },
   editScheduleHint: {
-    color: '#5B655F',
+    color: '#5C6658',
     fontSize: 12,
     paddingHorizontal: 4,
     marginTop: -8,
@@ -367,30 +367,30 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: '#1F2A24',
+    borderColor: '#1C2318',
   },
   weekdayChipSelected: {
-    backgroundColor: '#16321F',
-    borderColor: '#22C55E',
+    backgroundColor: '#1A2A0F',
+    borderColor: '#B6FF3C',
   },
   weekdayChipToday: {
-    borderColor: '#22C55E',
+    borderColor: '#B6FF3C',
   },
   weekdayChipEditing: {
     borderStyle: 'dashed',
   },
   weekdayLabel: {
-    color: '#8A8A8E',
+    color: '#7C8A78',
     fontSize: 12,
     fontWeight: '600',
   },
   weekdayValue: {
-    color: '#FFFFFF',
+    color: '#EAFFEF',
     fontSize: 11,
     marginTop: 4,
   },
   weekdayEditIcon: {
-    color: '#5B655F',
+    color: '#5C6658',
     fontSize: 10,
     marginTop: 3,
   },

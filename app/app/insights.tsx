@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyText: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 4,
     textAlign: 'center',
   },
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     fontSize: 12,
-    color: '#5C6658',
+    color: '#7C8A78',
     marginTop: 4,
     fontStyle: 'italic',
   },

@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   optionSubtitle: {
     fontSize: 13,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 2,
   },
   checkmark: {
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 15,
     fontWeight: '600',
   },

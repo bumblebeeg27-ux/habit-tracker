@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   subLabel: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 13,
     fontWeight: '600',
   },

@@ -65,3 +65,36 @@ export async function updateExercise(
   day.exercises[exerciseIndex] = { ...day.exercises[exerciseIndex], ...patch };
   await db.update(workoutProgram).set({ planJson: JSON.stringify(program) }).where(eq(workoutProgram.id, row.id));
 }
+
+export async function addExercise(dayIndex: number, exercise: Exercise): Promise<void> {
+  const row = await getActiveProgramRow();
+  if (!row) return;
+  const program = JSON.parse(row.planJson) as WorkoutProgram;
+  const day = program.days.find((d) => d.dayIndex === dayIndex);
+  if (!day) return;
+  day.exercises.push(exercise);
+  await db.update(workoutProgram).set({ planJson: JSON.stringify(program) }).where(eq(workoutProgram.id, row.id));
+}
+
+export async function removeExercise(dayIndex: number, exerciseIndex: number): Promise<void> {
+  const row = await getActiveProgramRow();
+  if (!row) return;
+  const program = JSON.parse(row.planJson) as WorkoutProgram;
+  const day = program.days.find((d) => d.dayIndex === dayIndex);
+  if (!day || !day.exercises[exerciseIndex]) return;
+  day.exercises.splice(exerciseIndex, 1);
+  await db.update(workoutProgram).set({ planJson: JSON.stringify(program) }).where(eq(workoutProgram.id, row.id));
+}
+
+// Adds a brand-new rest-day slot the user can fill with their own
+// exercises, for training days the AI-generated program doesn't cover.
+export async function addCustomDay(focus: string): Promise<number> {
+  const row = await getActiveProgramRow();
+  if (!row) throw new Error('No active program');
+  const program = JSON.parse(row.planJson) as WorkoutProgram;
+  const nextIndex = Math.max(0, ...program.days.map((d) => d.dayIndex)) + 1;
+  program.days.push({ dayIndex: nextIndex, focus, exercises: [] });
+  program.days.sort((a, b) => a.dayIndex - b.dayIndex);
+  await db.update(workoutProgram).set({ planJson: JSON.stringify(program) }).where(eq(workoutProgram.id, row.id));
+  return nextIndex;
+}

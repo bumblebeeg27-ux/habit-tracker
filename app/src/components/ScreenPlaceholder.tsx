@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 15,
-    color: '#7C8A78',
+    color: '#9BA895',
     textAlign: 'center',
   },
 });

@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 13,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 2,
     textTransform: 'capitalize',
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   sectionTitle: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 12,
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   rowLabel: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 14,
   },
   rowValue: {

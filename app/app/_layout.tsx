@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#05070A',
   },
   loadingText: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 15,
   },
   errorText: {

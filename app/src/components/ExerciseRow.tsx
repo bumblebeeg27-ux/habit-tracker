@@ -1,14 +1,16 @@
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Exercise } from '../types/workout';
 import { findExerciseImageUrl } from '../utils/exerciseImage';
 
 export function ExerciseRow({
   exercise,
   onSave,
+  onDelete,
 }: {
   exercise: Exercise;
   onSave: (patch: Partial<Exercise>) => void;
+  onDelete?: () => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [sets, setSets] = useState(String(exercise.sets));
@@ -28,6 +30,13 @@ export function ExerciseRow({
     setEditing(false);
   }
 
+  function handleDelete() {
+    Alert.alert('Remove exercise?', `This removes ${exercise.name} from this day.`, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Remove', style: 'destructive', onPress: onDelete },
+    ]);
+  }
+
   if (editing) {
     return (
       <View style={styles.row}>
@@ -39,14 +48,14 @@ export function ExerciseRow({
             onChangeText={setSets}
             keyboardType="number-pad"
             placeholder="Sets"
-            placeholderTextColor="#5C6658"
+            placeholderTextColor="#7C8A78"
           />
           <TextInput
             style={styles.miniInput}
             value={reps}
             onChangeText={setReps}
             placeholder="Reps"
-            placeholderTextColor="#5C6658"
+            placeholderTextColor="#7C8A78"
           />
           <TextInput
             style={styles.miniInput}
@@ -54,7 +63,7 @@ export function ExerciseRow({
             onChangeText={setRestSec}
             keyboardType="number-pad"
             placeholder="Rest s"
-            placeholderTextColor="#5C6658"
+            placeholderTextColor="#7C8A78"
           />
           <Pressable style={styles.doneChip} onPress={handleDone}>
             <Text style={styles.doneChipText}>✓</Text>
@@ -81,7 +90,7 @@ export function ExerciseRow({
                 onError={() => setImageFailed(true)}
               />
               {imageLoading && (
-                <ActivityIndicator size="small" color="#7C8A78" style={StyleSheet.absoluteFill} />
+                <ActivityIndicator size="small" color="#9BA895" style={StyleSheet.absoluteFill} />
               )}
             </>
           ) : (
@@ -94,9 +103,16 @@ export function ExerciseRow({
             {exercise.sets} × {exercise.reps} · rest {exercise.restSec}s
           </Text>
         </View>
-        <Pressable style={styles.actionButton} onPress={() => setEditing(true)}>
-          <Text style={styles.actionIcon}>✎</Text>
-        </Pressable>
+        <View style={styles.actions}>
+          <Pressable style={styles.actionButton} onPress={() => setEditing(true)}>
+            <Text style={styles.actionIcon}>✎</Text>
+          </Pressable>
+          {onDelete && (
+            <Pressable style={styles.actionButton} onPress={handleDelete}>
+              <Text style={[styles.actionIcon, styles.deleteIcon]}>✕</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
       {exercise.notes ? <Text style={styles.notes}>{exercise.notes}</Text> : null}
       {imageExpanded && imageUrl && !imageFailed && (
@@ -133,7 +149,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   thumbnailFallback: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 16,
     fontWeight: '700',
   },
@@ -145,6 +161,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  actions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
   actionButton: {
     width: 28,
     height: 28,
@@ -154,12 +174,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  deleteIcon: {
+    color: '#F87171',
+  },
   actionIcon: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 12,
   },
   meta: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 13,
     marginTop: 2,
   },
@@ -171,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0A0F0C',
   },
   notes: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 12,
     marginTop: 2,
     fontStyle: 'italic',

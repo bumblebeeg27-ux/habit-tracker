@@ -33,7 +33,7 @@ export default function HealthScreen() {
         onChangeText={(injuries) => update({ injuries })}
         multiline
       />
-      <Text style={{ color: '#7C8A78', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: '#9BA895', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         DIETARY PREFERENCE
       </Text>
       <OptionPicker

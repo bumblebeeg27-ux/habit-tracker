@@ -85,7 +85,7 @@ export default function CoachScreen() {
           ))}
           {sending && (
             <View style={[styles.bubble, styles.modelBubble]}>
-              <ActivityIndicator color="#7C8A78" />
+              <ActivityIndicator color="#9BA895" />
             </View>
           )}
           {error && <Text style={styles.errorText}>{error}</Text>}
@@ -95,7 +95,7 @@ export default function CoachScreen() {
           <TextInput
             style={styles.input}
             placeholder="Ask your coach…"
-            placeholderTextColor="#5C6658"
+            placeholderTextColor="#7C8A78"
             value={input}
             onChangeText={setInput}
             multiline
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     fontSize: 12,
-    color: '#5C6658',
+    color: '#7C8A78',
     marginTop: 4,
   },
   messages: {
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: '#7C8A78',
+    color: '#9BA895',
     lineHeight: 20,
     marginTop: 24,
   },

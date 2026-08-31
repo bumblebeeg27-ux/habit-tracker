@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   rowLabel: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 14,
   },
   rowValue: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   consent: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 12,
     lineHeight: 17,
     marginTop: 20,

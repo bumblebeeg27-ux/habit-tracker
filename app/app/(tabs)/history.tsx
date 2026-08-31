@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 4,
   },
   card: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   chevron: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 13,
   },
   cardTitle: {
@@ -196,11 +196,11 @@ const styles = StyleSheet.create({
   },
   cardSubtitle: {
     fontSize: 13,
-    color: '#7C8A78',
+    color: '#9BA895',
   },
   emptyText: {
     fontSize: 14,
-    color: '#7C8A78',
+    color: '#9BA895',
     lineHeight: 20,
   },
   detail: {
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   setChipText: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 12,
   },
 });

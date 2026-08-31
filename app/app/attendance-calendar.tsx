@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   streakLabel: {
     fontSize: 13,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 2,
   },
   legend: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   legendText: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 12,
   },
   monthNav: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   weekdayLabel: {
     flex: 1,
     textAlign: 'center',
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   hint: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 12,
     textAlign: 'center',
   },

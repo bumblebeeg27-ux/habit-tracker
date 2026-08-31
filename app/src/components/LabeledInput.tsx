@@ -11,7 +11,7 @@ export function LabeledInput({
       <Text style={styles.label}>{label}</Text>
       <TextInput
         style={[styles.input, style]}
-        placeholderTextColor="#5C6658"
+        placeholderTextColor="#7C8A78"
         {...inputProps}
       />
     </View>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#7C8A78',
+    color: '#9BA895',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },

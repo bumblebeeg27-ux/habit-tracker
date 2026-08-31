@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 13,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 4,
   },
 });

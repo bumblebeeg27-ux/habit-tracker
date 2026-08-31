@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   progress: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 13,
     fontWeight: '600',
     textTransform: 'uppercase',
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 15,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 8,
   },
   lastTime: {

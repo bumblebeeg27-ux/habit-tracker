@@ -1,15 +1,18 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AddExerciseRow } from '../../src/components/AddExerciseRow';
 import { DayPickerModal } from '../../src/components/DayPickerModal';
 import { ExerciseRow } from '../../src/components/ExerciseRow';
 import { db } from '../../src/db/client';
 import { attendanceRecord, streakState, userProfile, workoutProgram as workoutProgramTable } from '../../src/db/schema';
 import {
+  addExercise,
   getActiveWorkoutProgram,
   getWeeklySchedule,
+  removeExercise,
   saveWeeklySchedule,
   saveWorkoutProgram,
   updateExercise,
@@ -79,6 +82,17 @@ export default function TodayScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleRegeneratePress() {
+    Alert.alert(
+      'Build a new program?',
+      'This replaces your current program, including any exercises you added or edited yourself.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Build new plan', style: 'destructive', onPress: handleGenerate },
+      ],
+    );
   }
 
   function handleWeekdayPress(weekday: number) {
@@ -159,9 +173,14 @@ export default function TodayScreen() {
               <Text style={styles.weekTitle}>
                 {program.daysPerWeek}x/week · {program.durationWeeks}-week program
               </Text>
-              <Pressable onPress={() => setEditingSchedule((e) => !e)}>
-                <Text style={styles.editScheduleLink}>{editingSchedule ? 'Done' : 'Edit schedule'}</Text>
-              </Pressable>
+              <View style={styles.headerActions}>
+                <Pressable onPress={handleRegeneratePress}>
+                  <Text style={styles.editScheduleLink}>Regenerate</Text>
+                </Pressable>
+                <Pressable onPress={() => setEditingSchedule((e) => !e)}>
+                  <Text style={styles.editScheduleLink}>{editingSchedule ? 'Done' : 'Edit schedule'}</Text>
+                </Pressable>
+              </View>
             </View>
             {editingSchedule && (
               <Text style={styles.editScheduleHint}>Tap a day to choose which workout runs on it.</Text>
@@ -200,9 +219,15 @@ export default function TodayScreen() {
                     key={i}
                     exercise={exercise}
                     onSave={(patch) => updateExercise(selectedDay.dayIndex, i, patch)}
+                    onDelete={() => removeExercise(selectedDay.dayIndex, i)}
                   />
                 ))}
-                <Pressable style={styles.button} onPress={() => handleStartDay(selectedDay)}>
+                <AddExerciseRow onAdd={(exercise) => addExercise(selectedDay.dayIndex, exercise)} />
+                <Pressable
+                  style={[styles.button, selectedDay.exercises.length === 0 && styles.buttonDisabled]}
+                  disabled={selectedDay.exercises.length === 0}
+                  onPress={() => handleStartDay(selectedDay)}
+                >
                   <Text style={styles.buttonText}>Start workout</Text>
                 </Pressable>
               </View>
@@ -266,7 +291,7 @@ const styles = StyleSheet.create({
   },
   streakLabel: {
     fontSize: 13,
-    color: '#7C8A78',
+    color: '#9BA895',
     marginTop: 2,
   },
   calendarLink: {
@@ -313,7 +338,7 @@ const styles = StyleSheet.create({
   },
   cardSubtitle: {
     fontSize: 14,
-    color: '#7C8A78',
+    color: '#9BA895',
     lineHeight: 20,
   },
   loadingText: {
@@ -325,6 +350,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
+  },
+  buttonDisabled: {
+    opacity: 0.4,
   },
   buttonText: {
     color: '#0A1400',
@@ -342,8 +370,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 4,
   },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 16,
+  },
   weekTitle: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 13,
   },
   editScheduleLink: {
@@ -352,7 +384,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   editScheduleHint: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 12,
     paddingHorizontal: 4,
     marginTop: -8,
@@ -380,7 +412,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   weekdayLabel: {
-    color: '#7C8A78',
+    color: '#9BA895',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -390,7 +422,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   weekdayEditIcon: {
-    color: '#5C6658',
+    color: '#7C8A78',
     fontSize: 10,
     marginTop: 3,
   },

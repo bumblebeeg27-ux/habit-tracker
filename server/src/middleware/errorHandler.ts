@@ -10,8 +10,15 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
   if (err instanceof ZodError) {
     return res.status(400).json({ error: 'Validation failed', details: err.flatten() });
   }
-  const message = err instanceof Error ? err.message : 'Internal server error';
   const status = typeof (err as { status?: unknown })?.status === 'number' ? (err as { status: number }).status : 500;
-  if (status >= 500) console.error(err);
+  if (status >= 500) {
+    // Server/upstream errors (e.g. a Gemini API failure) can carry internal
+    // details in err.message -- log them, but never forward them to the
+    // client. Only genuinely client-facing errors (4xx, thrown with an
+    // explicit status) are safe to echo back verbatim.
+    console.error(err);
+    return res.status(status).json({ error: 'Something went wrong. Please try again.' });
+  }
+  const message = err instanceof Error ? err.message : 'Bad request';
   res.status(status).json({ error: message });
 }

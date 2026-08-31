@@ -8,6 +8,12 @@ import chatRoutes from './routes/chat.routes.js';
 
 export const app = express();
 
+// Render sits behind a reverse proxy, so without this every request's
+// req.ip resolves to the proxy's address instead of the real client --
+// collapsing express-rate-limit's per-client buckets into one shared
+// bucket for the entire app.
+app.set('trust proxy', 1);
+
 const allowedOrigins = (process.env.CORS_ORIGIN ?? '')
   .split(',')
   .map((origin) => origin.trim())

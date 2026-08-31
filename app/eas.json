@@ -12,6 +12,7 @@
     "preview": {
       "distribution": "internal",
       "android": { "buildType": "apk" },
+      "ios": { "simulator": true },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://fitcoach-api-05v5.onrender.com",
         "EXPO_PUBLIC_CLIENT_KEY": "3e5e12de32dd976bbda8bd1d2da033af2d92381a86460544"

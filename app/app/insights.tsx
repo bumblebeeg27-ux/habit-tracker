@@ -2,10 +2,16 @@ import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ConsistencyChart } from '../src/components/ConsistencyChart';
 import { db } from '../src/db/client';
 import { attendanceRecord, userProfile } from '../src/db/schema';
 import { getActiveProgramRow, getWeeklySchedule } from '../src/db/repositories/workoutProgram';
-import { computeConsistencyInsights, ConsistencyInsights } from '../src/services/insights';
+import {
+  computeConsistencyInsights,
+  computeWeeklyBreakdown,
+  ConsistencyInsights,
+  WeeklyBreakdown,
+} from '../src/services/insights';
 import { WorkoutProgram } from '../src/types/workout';
 
 export default function InsightsScreen() {
@@ -14,6 +20,7 @@ export default function InsightsScreen() {
   const profile = profiles?.[0];
 
   const [insights, setInsights] = useState<ConsistencyInsights | null>(null);
+  const [weeklyBreakdown, setWeeklyBreakdown] = useState<WeeklyBreakdown[]>([]);
   const [program, setProgram] = useState<WorkoutProgram | null>(null);
 
   useEffect(() => {
@@ -27,6 +34,7 @@ export default function InsightsScreen() {
       setInsights(
         computeConsistencyInsights(parsedProgram, schedule, attendanceRows ?? [], new Date(row.createdAt)),
       );
+      setWeeklyBreakdown(computeWeeklyBreakdown(schedule, attendanceRows ?? [], new Date(row.createdAt)));
     }
     load();
   }, [attendanceRows]);
@@ -64,6 +72,8 @@ export default function InsightsScreen() {
             <Text style={styles.statLabel}>Missed</Text>
           </View>
         </View>
+
+        <ConsistencyChart weeks={weeklyBreakdown} />
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>What this means for your goal</Text>

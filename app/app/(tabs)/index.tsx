@@ -1,7 +1,17 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AddExerciseRow } from '../../src/components/AddExerciseRow';
 import { DayPickerModal } from '../../src/components/DayPickerModal';
@@ -117,6 +127,11 @@ export default function TodayScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Today</Text>
 
@@ -242,6 +257,7 @@ export default function TodayScreen() {
           </>
         )}
       </ScrollView>
+      </KeyboardAvoidingView>
 
       {program && pickerWeekday !== null && (
         <DayPickerModal

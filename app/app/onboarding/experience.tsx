@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import { OnboardingScreen } from '../../src/components/OnboardingScreen';
 import { OptionPicker } from '../../src/components/OptionPicker';
 import { useOnboardingStore } from '../../src/state/onboardingStore';
+import { useThemeColors } from '../../src/theme/ThemeContext';
 
 const EXPERIENCE_OPTIONS = [
   { value: 'beginner', label: 'Beginner', description: 'New to structured training, or under 6 months in' },
@@ -27,6 +28,7 @@ const DURATION_OPTIONS = [
 
 export default function ExperienceScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { draft, update } = useOnboardingStore();
 
   const canContinue = !!draft.experienceLevel && !!draft.daysPerWeek && !!draft.sessionDurationMin;
@@ -45,7 +47,7 @@ export default function ExperienceScreen() {
         value={draft.experienceLevel}
         onChange={(experienceLevel) => update({ experienceLevel })}
       />
-      <Text style={{ color: '#9BA895', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: colors.textSecondary, marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         HOW OFTEN CAN YOU TRAIN?
       </Text>
       <OptionPicker
@@ -53,7 +55,7 @@ export default function ExperienceScreen() {
         value={draft.daysPerWeek ? String(draft.daysPerWeek) : undefined}
         onChange={(value) => update({ daysPerWeek: Number(value) })}
       />
-      <Text style={{ color: '#9BA895', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: colors.textSecondary, marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         HOW LONG PER SESSION?
       </Text>
       <OptionPicker

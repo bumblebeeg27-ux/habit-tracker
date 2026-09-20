@@ -4,8 +4,11 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ProgressChart, ProgressPoint } from '../../src/components/ProgressChart';
 import { db } from '../../src/db/client';
-import { workoutSession, workoutSetLog, WorkoutSetLogRow } from '../../src/db/schema';
+import { WorkoutSessionRow, workoutSession, workoutSetLog, WorkoutSetLogRow } from '../../src/db/schema';
+import { useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 
 function groupSetsByExercise(sets: WorkoutSetLogRow[]) {
   const byExercise = new Map<string, { order: number; sets: WorkoutSetLogRow[] }>();
@@ -25,8 +28,54 @@ function groupSetsByExercise(sets: WorkoutSetLogRow[]) {
     }));
 }
 
+const MAX_PROGRESS_POINTS = 8;
+
+// Picks whichever exercise has been logged with a weight across the most
+// distinct sessions, and returns its heaviest set per session over time --
+// the most natural "progress" signal without asking the user to pick one.
+function computeTopExerciseProgress(
+  sessions: WorkoutSessionRow[],
+  allSetLogs: WorkoutSetLogRow[],
+): { exerciseName: string; points: ProgressPoint[] } | null {
+  const weighted = allSetLogs.filter((log) => log.weightKg != null);
+  if (weighted.length === 0) return null;
+
+  const sessionsById = new Map(sessions.map((s) => [s.id, s]));
+  const bySessionAndExercise = new Map<string, Map<number, number>>();
+  for (const log of weighted) {
+    const session = sessionsById.get(log.sessionId);
+    if (!session?.completedAt) continue;
+    let perSession = bySessionAndExercise.get(log.exerciseName);
+    if (!perSession) {
+      perSession = new Map();
+      bySessionAndExercise.set(log.exerciseName, perSession);
+    }
+    perSession.set(log.sessionId, Math.max(perSession.get(log.sessionId) ?? 0, log.weightKg!));
+  }
+
+  let topExercise: string | null = null;
+  let topCount = 0;
+  for (const [name, perSession] of bySessionAndExercise) {
+    if (perSession.size > topCount) {
+      topCount = perSession.size;
+      topExercise = name;
+    }
+  }
+  if (!topExercise || topCount < 2) return null;
+
+  const perSession = bySessionAndExercise.get(topExercise)!;
+  const points: ProgressPoint[] = Array.from(perSession.entries())
+    .map(([sessionId, weightKg]) => ({ sessionId, weightKg, date: sessionsById.get(sessionId)!.completedAt! }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(-MAX_PROGRESS_POINTS);
+
+  return { exerciseName: topExercise, points };
+}
+
 export default function HistoryScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: sessions } = useLiveQuery(
     db.select().from(workoutSession).where(eq(workoutSession.status, 'completed')).orderBy(desc(workoutSession.completedAt)),
   );
@@ -37,6 +86,7 @@ export default function HistoryScreen() {
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const thisWeekCount =
     sessions?.filter((s) => (s.completedAt?.getTime() ?? 0) >= weekAgo).length ?? 0;
+  const topProgress = computeTopExerciseProgress(sessions ?? [], allSetLogs ?? []);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -60,6 +110,8 @@ export default function HistoryScreen() {
             </View>
           </View>
         )}
+
+        {topProgress && <ProgressChart exerciseName={topProgress.exerciseName} points={topProgress.points} />}
 
         {completedCount === 0 ? (
           <View style={styles.card}>
@@ -122,116 +174,118 @@ export default function HistoryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  insightsLink: {
-    color: '#B6FF3C',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#B6FF3C',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#9BA895',
-    marginTop: 4,
-  },
-  card: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-  },
-  cardHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  cardHeaderText: {
-    flex: 1,
-    gap: 6,
-  },
-  chevron: {
-    color: '#7C8A78',
-    fontSize: 13,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  cardSubtitle: {
-    fontSize: 13,
-    color: '#9BA895',
-  },
-  emptyText: {
-    fontSize: 14,
-    color: '#9BA895',
-    lineHeight: 20,
-  },
-  detail: {
-    marginTop: 14,
-    paddingTop: 14,
-    borderTopWidth: 1,
-    borderTopColor: '#1C2318',
-    gap: 12,
-  },
-  exerciseBlock: {
-    gap: 6,
-  },
-  exerciseName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#EAFFEF',
-  },
-  setsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  setChip: {
-    borderWidth: 1,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  setChipText: {
-    color: '#9BA895',
-    fontSize: 12,
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 16,
+    },
+    headerRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    insightsLink: {
+      color: colors.accentText,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    statsRow: {
+      flexDirection: 'row',
+      gap: 12,
+    },
+    statCard: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+      alignItems: 'center',
+    },
+    statValue: {
+      fontSize: 28,
+      fontWeight: '700',
+      color: colors.accentText,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+    card: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+    },
+    cardHeaderRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+    },
+    cardHeaderText: {
+      flex: 1,
+      gap: 6,
+    },
+    chevron: {
+      color: colors.textMuted,
+      fontSize: 13,
+    },
+    cardTitle: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    cardSubtitle: {
+      fontSize: 13,
+      color: colors.textSecondary,
+    },
+    emptyText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+    },
+    detail: {
+      marginTop: 14,
+      paddingTop: 14,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      gap: 12,
+    },
+    exerciseBlock: {
+      gap: 6,
+    },
+    exerciseName: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: colors.textPrimary,
+    },
+    setsRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 6,
+    },
+    setChip: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+    },
+    setChipText: {
+      color: colors.textSecondary,
+      fontSize: 12,
+    },
+  });
+}

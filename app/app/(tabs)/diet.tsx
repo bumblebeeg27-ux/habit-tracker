@@ -24,6 +24,8 @@ import {
   saveDietPlan,
 } from '../../src/db/repositories/dietPlan';
 import { fetchDietPlan } from '../../src/services/api';
+import { useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 import { DietPlan, Meal } from '../../src/types/diet';
 
 const MEAL_ICONS: { match: RegExp; icon: string }[] = [
@@ -39,6 +41,8 @@ function iconForMeal(name: string): string {
 }
 
 export default function DietScreen() {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const { data: planRows } = useLiveQuery(db.select().from(dietPlanTable));
   const profile = profiles?.[0];
@@ -108,7 +112,7 @@ export default function DietScreen() {
 
         {loading && (
           <View style={styles.card}>
-            <ActivityIndicator color="#B6FF3C" />
+            <ActivityIndicator color={colors.accentText} />
             <Text style={[styles.cardSubtitle, styles.loadingText]}>Building your plan…</Text>
           </View>
         )}
@@ -156,6 +160,8 @@ export default function DietScreen() {
 }
 
 function MealCard({ meal, mealIndex }: { meal: Meal; mealIndex: number }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const [addingItem, setAddingItem] = useState(false);
   const [itemText, setItemText] = useState('');
 
@@ -202,7 +208,7 @@ function MealCard({ meal, mealIndex }: { meal: Meal; mealIndex: number }) {
             value={itemText}
             onChangeText={setItemText}
             placeholder="e.g. 1 cup Greek yogurt"
-            placeholderTextColor="#7C8A78"
+            placeholderTextColor={colors.textMuted}
             autoFocus
             onSubmitEditing={handleAddItem}
           />
@@ -220,6 +226,8 @@ function MealCard({ meal, mealIndex }: { meal: Meal; mealIndex: number }) {
 }
 
 function AddMealForm({ onDone }: { onDone: () => void }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const [name, setName] = useState('');
   const [calories, setCalories] = useState('');
 
@@ -236,7 +244,7 @@ function AddMealForm({ onDone }: { onDone: () => void }) {
         value={name}
         onChangeText={setName}
         placeholder="Meal name, e.g. Evening Snack"
-        placeholderTextColor="#7C8A78"
+        placeholderTextColor={colors.textMuted}
         autoFocus
       />
       <TextInput
@@ -244,7 +252,7 @@ function AddMealForm({ onDone }: { onDone: () => void }) {
         value={calories}
         onChangeText={setCalories}
         placeholder="Approx calories (optional)"
-        placeholderTextColor="#7C8A78"
+        placeholderTextColor={colors.textMuted}
         keyboardType="number-pad"
       />
       <View style={styles.addMealActions}>
@@ -260,6 +268,8 @@ function AddMealForm({ onDone }: { onDone: () => void }) {
 }
 
 function MacroStat({ label, value }: { label: string; value: string }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <View style={styles.macroStat}>
       <Text style={styles.macroValue}>{value}</Text>
@@ -268,237 +278,239 @@ function MacroStat({ label, value }: { label: string; value: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 16,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  card: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    gap: 8,
-    backgroundColor: '#0A0F0C80',
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: '#9BA895',
-    lineHeight: 20,
-  },
-  loadingText: {
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#0A1400',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  errorText: {
-    color: '#F87171',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  macroCard: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-  },
-  macroRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  macroStat: {
-    alignItems: 'center',
-  },
-  macroValue: {
-    color: '#B6FF3C',
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  macroLabel: {
-    color: '#9BA895',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  regenerateButton: {
-    marginTop: 16,
-    borderWidth: 1.5,
-    borderColor: '#B6FF3C',
-    backgroundColor: '#1A2A0F',
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  regenerateButtonText: {
-    color: '#CFFF7A',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  mealHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  mealHeaderRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  mealCalories: {
-    color: '#9BA895',
-    fontSize: 13,
-  },
-  mealDeleteButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 7,
-    borderWidth: 1,
-    borderColor: '#1C2318',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mealDeleteIcon: {
-    color: '#F87171',
-    fontSize: 11,
-  },
-  mealItemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  mealItem: {
-    color: '#B9C4B2',
-    fontSize: 14,
-    lineHeight: 20,
-    flexShrink: 1,
-  },
-  mealItemDelete: {
-    color: '#7C8A78',
-    fontSize: 12,
-    paddingHorizontal: 6,
-  },
-  addItemLink: {
-    marginTop: 4,
-  },
-  addItemLinkText: {
-    color: '#B6FF3C',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  addItemRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 4,
-    alignItems: 'center',
-  },
-  addItemInput: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: '#EAFFEF',
-    fontSize: 13,
-    backgroundColor: '#05070A',
-  },
-  addItemConfirm: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  addItemConfirmText: {
-    color: '#0A1400',
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  addMealButton: {
-    borderWidth: 1.5,
-    borderColor: '#B6FF3C',
-    backgroundColor: '#1A2A0F',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  addMealButtonText: {
-    color: '#CFFF7A',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  addMealForm: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    gap: 8,
-    backgroundColor: '#0A0F0C80',
-  },
-  addMealNameInput: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    color: '#EAFFEF',
-    fontSize: 14,
-    backgroundColor: '#05070A',
-  },
-  addMealActions: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 4,
-  },
-  cancelButton: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#9BA895',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  confirmButton: {
-    flex: 1,
-    backgroundColor: '#B6FF3C',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  confirmButtonDisabled: {
-    opacity: 0.5,
-  },
-  confirmButtonText: {
-    color: '#0A1400',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 16,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    card: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      gap: 8,
+      backgroundColor: colors.card,
+    },
+    cardTitle: {
+      fontSize: 17,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    cardSubtitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+    },
+    loadingText: {
+      textAlign: 'center',
+    },
+    button: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    buttonText: {
+      color: colors.onAccent,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    errorText: {
+      color: colors.danger,
+      fontSize: 14,
+      lineHeight: 20,
+    },
+    macroCard: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+    },
+    macroRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    macroStat: {
+      alignItems: 'center',
+    },
+    macroValue: {
+      color: colors.accentText,
+      fontSize: 20,
+      fontWeight: '700',
+    },
+    macroLabel: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      marginTop: 2,
+    },
+    regenerateButton: {
+      marginTop: 16,
+      borderWidth: 1.5,
+      borderColor: colors.accentText,
+      backgroundColor: colors.accentBg,
+      borderRadius: 12,
+      paddingVertical: 12,
+      alignItems: 'center',
+    },
+    regenerateButtonText: {
+      color: colors.accentLight,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    mealHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    mealHeaderRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    mealCalories: {
+      color: colors.textSecondary,
+      fontSize: 13,
+    },
+    mealDeleteButton: {
+      width: 24,
+      height: 24,
+      borderRadius: 7,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    mealDeleteIcon: {
+      color: colors.danger,
+      fontSize: 11,
+    },
+    mealItemRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    mealItem: {
+      color: colors.tertiary,
+      fontSize: 14,
+      lineHeight: 20,
+      flexShrink: 1,
+    },
+    mealItemDelete: {
+      color: colors.textMuted,
+      fontSize: 12,
+      paddingHorizontal: 6,
+    },
+    addItemLink: {
+      marginTop: 4,
+    },
+    addItemLinkText: {
+      color: colors.accentText,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    addItemRow: {
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 4,
+      alignItems: 'center',
+    },
+    addItemInput: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      color: colors.textPrimary,
+      fontSize: 13,
+      backgroundColor: colors.bg,
+    },
+    addItemConfirm: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 8,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+    },
+    addItemConfirmText: {
+      color: colors.onAccent,
+      fontSize: 13,
+      fontWeight: '700',
+    },
+    addMealButton: {
+      borderWidth: 1.5,
+      borderColor: colors.accentText,
+      backgroundColor: colors.accentBg,
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: 'center',
+    },
+    addMealButtonText: {
+      color: colors.accentLight,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    addMealForm: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      gap: 8,
+      backgroundColor: colors.card,
+    },
+    addMealNameInput: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+      color: colors.textPrimary,
+      fontSize: 14,
+      backgroundColor: colors.bg,
+    },
+    addMealActions: {
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 4,
+    },
+    cancelButton: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingVertical: 12,
+      alignItems: 'center',
+    },
+    cancelButtonText: {
+      color: colors.textSecondary,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    confirmButton: {
+      flex: 1,
+      backgroundColor: colors.accentFill,
+      borderRadius: 8,
+      paddingVertical: 12,
+      alignItems: 'center',
+    },
+    confirmButtonDisabled: {
+      opacity: 0.5,
+    },
+    confirmButtonText: {
+      color: colors.onAccent,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+  });
+}

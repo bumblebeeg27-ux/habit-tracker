@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useThemeColors } from '../theme/ThemeContext';
+import { ThemeColors } from '../theme/colors';
 import { Exercise } from '../types/workout';
 
 export function AddExerciseRow({ onAdd }: { onAdd: (exercise: Exercise) => void }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState('');
   const [sets, setSets] = useState('3');
@@ -43,7 +47,7 @@ export function AddExerciseRow({ onAdd }: { onAdd: (exercise: Exercise) => void 
         value={name}
         onChangeText={setName}
         placeholder="Exercise name"
-        placeholderTextColor="#7C8A78"
+        placeholderTextColor={colors.textMuted}
         autoFocus
       />
       <View style={styles.row}>
@@ -53,14 +57,14 @@ export function AddExerciseRow({ onAdd }: { onAdd: (exercise: Exercise) => void 
           onChangeText={setSets}
           keyboardType="number-pad"
           placeholder="Sets"
-          placeholderTextColor="#7C8A78"
+          placeholderTextColor={colors.textMuted}
         />
         <TextInput
           style={styles.miniInput}
           value={reps}
           onChangeText={setReps}
           placeholder="Reps"
-          placeholderTextColor="#7C8A78"
+          placeholderTextColor={colors.textMuted}
         />
         <TextInput
           style={styles.miniInput}
@@ -68,7 +72,7 @@ export function AddExerciseRow({ onAdd }: { onAdd: (exercise: Exercise) => void 
           onChangeText={setRestSec}
           keyboardType="number-pad"
           placeholder="Rest s"
-          placeholderTextColor="#7C8A78"
+          placeholderTextColor={colors.textMuted}
         />
       </View>
       <View style={styles.row}>
@@ -83,80 +87,82 @@ export function AddExerciseRow({ onAdd }: { onAdd: (exercise: Exercise) => void 
   );
 }
 
-const styles = StyleSheet.create({
-  addButton: {
-    borderWidth: 1.5,
-    borderColor: '#B6FF3C',
-    backgroundColor: '#1A2A0F',
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  addButtonText: {
-    color: '#CFFF7A',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  form: {
-    marginTop: 12,
-    padding: 12,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 12,
-    gap: 8,
-  },
-  nameInput: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: '#EAFFEF',
-    fontSize: 14,
-    backgroundColor: '#05070A',
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  miniInput: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    color: '#EAFFEF',
-    fontSize: 13,
-    backgroundColor: '#05070A',
-  },
-  cancelButton: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 8,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#9BA895',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  confirmButton: {
-    flex: 1,
-    backgroundColor: '#B6FF3C',
-    borderRadius: 8,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  confirmButtonDisabled: {
-    opacity: 0.5,
-  },
-  confirmButtonText: {
-    color: '#0A1400',
-    fontSize: 13,
-    fontWeight: '700',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    addButton: {
+      borderWidth: 1.5,
+      borderColor: colors.accentText,
+      backgroundColor: colors.accentBg,
+      borderRadius: 12,
+      paddingVertical: 12,
+      alignItems: 'center',
+      marginTop: 12,
+    },
+    addButtonText: {
+      color: colors.accentLight,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    form: {
+      marginTop: 12,
+      padding: 12,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 12,
+      gap: 8,
+    },
+    nameInput: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      color: colors.textPrimary,
+      fontSize: 14,
+      backgroundColor: colors.bg,
+    },
+    row: {
+      flexDirection: 'row',
+      gap: 6,
+    },
+    miniInput: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      paddingVertical: 6,
+      color: colors.textPrimary,
+      fontSize: 13,
+      backgroundColor: colors.bg,
+    },
+    cancelButton: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+    cancelButtonText: {
+      color: colors.textSecondary,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    confirmButton: {
+      flex: 1,
+      backgroundColor: colors.accentFill,
+      borderRadius: 8,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+    confirmButtonDisabled: {
+      opacity: 0.5,
+    },
+    confirmButtonText: {
+      color: colors.onAccent,
+      fontSize: 13,
+      fontWeight: '700',
+    },
+  });
+}

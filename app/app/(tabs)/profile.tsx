@@ -1,15 +1,33 @@
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite/query';
 import { useRouter } from 'expo-router';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../../src/db/client';
-import { clearAllData } from '../../src/db/repositories/userProfile';
+import { clearAllData, updateUserProfile } from '../../src/db/repositories/userProfile';
 import { userProfile } from '../../src/db/schema';
+import { hasCheckedInToday } from '../../src/db/repositories/attendance';
+import { setupNotifications } from '../../src/services/notifications';
+import { ThemeMode, useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const profile = profiles?.[0];
+
+  async function handleToggleNotifications(value: boolean) {
+    if (!profile) return;
+    await updateUserProfile(profile.id, { notificationsEnabled: value });
+    const checkedIn = await hasCheckedInToday();
+    await setupNotifications({ goal: profile.goal, notificationsEnabled: value }, checkedIn);
+  }
+
+  async function handleSetTheme(theme: ThemeMode) {
+    if (!profile) return;
+    await updateUserProfile(profile.id, { themePreference: theme });
+  }
 
   function handleClearData() {
     Alert.alert(
@@ -23,6 +41,8 @@ export default function ProfileScreen() {
   }
 
   if (!profile) return null;
+
+  const theme: ThemeMode = profile.themePreference === 'light' ? 'light' : 'dark';
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -57,6 +77,44 @@ export default function ProfileScreen() {
           <Row label="Allergies" value={profile.allergies || 'None noted'} />
         </Section>
 
+        <Section title="Appearance">
+          <View style={styles.themeRow}>
+            <Pressable
+              style={[styles.themeOption, theme === 'dark' && styles.themeOptionSelected]}
+              onPress={() => handleSetTheme('dark')}
+            >
+              <Text style={[styles.themeOptionText, theme === 'dark' && styles.themeOptionTextSelected]}>
+                🌙 Dark
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.themeOption, theme === 'light' && styles.themeOptionSelected]}
+              onPress={() => handleSetTheme('light')}
+            >
+              <Text style={[styles.themeOptionText, theme === 'light' && styles.themeOptionTextSelected]}>
+                ☀️ Light
+              </Text>
+            </Pressable>
+          </View>
+        </Section>
+
+        <Section title="Notifications">
+          <View style={styles.switchRow}>
+            <View style={styles.switchText}>
+              <Text style={styles.rowLabel}>Daily reminders</Text>
+              <Text style={styles.switchHint}>
+                A motivational nudge each morning, plus a check-in reminder if you haven't logged in by evening.
+              </Text>
+            </View>
+            <Switch
+              value={!!profile.notificationsEnabled}
+              onValueChange={handleToggleNotifications}
+              trackColor={{ false: colors.border, true: colors.accentFill }}
+              thumbColor={colors.textPrimary}
+            />
+          </View>
+        </Section>
+
         <Pressable style={styles.dangerButton} onPress={handleClearData}>
           <Text style={styles.dangerButtonText}>Clear my data</Text>
         </Pressable>
@@ -66,6 +124,8 @@ export default function ProfileScreen() {
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -75,6 +135,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Row({ label, value }: { label: string; value: string }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <View style={styles.row}>
       <Text style={styles.rowLabel}>{label}</Text>
@@ -83,107 +145,147 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#1A2A0F',
-    borderWidth: 1.5,
-    borderColor: '#B6FF3C',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: '#CFFF7A',
-    fontSize: 22,
-    fontWeight: '700',
-  },
-  headerText: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  subtitle: {
-    fontSize: 13,
-    color: '#9BA895',
-    marginTop: 2,
-    textTransform: 'capitalize',
-  },
-  editButton: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  editButtonText: {
-    color: '#B6FF3C',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  section: {
-    gap: 8,
-  },
-  sectionTitle: {
-    color: '#9BA895',
-    fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  card: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    gap: 12,
-    backgroundColor: '#0A0F0C80',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  rowLabel: {
-    color: '#9BA895',
-    fontSize: 14,
-  },
-  rowValue: {
-    color: '#EAFFEF',
-    fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-    flexShrink: 1,
-    textAlign: 'right',
-  },
-  dangerButton: {
-    marginTop: 8,
-    borderWidth: 1.5,
-    borderColor: '#7F1D1D',
-    borderRadius: 14,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  dangerButtonText: {
-    color: '#F87171',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 20,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+    },
+    avatar: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.accentBg,
+      borderWidth: 1.5,
+      borderColor: colors.accentText,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: {
+      color: colors.accentLight,
+      fontSize: 22,
+      fontWeight: '700',
+    },
+    headerText: {
+      flex: 1,
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    subtitle: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 2,
+      textTransform: 'capitalize',
+    },
+    editButton: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 10,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    editButtonText: {
+      color: colors.accentText,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    section: {
+      gap: 8,
+    },
+    sectionTitle: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      fontWeight: '700',
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    card: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      gap: 12,
+      backgroundColor: colors.card,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 12,
+    },
+    rowLabel: {
+      color: colors.textSecondary,
+      fontSize: 14,
+    },
+    rowValue: {
+      color: colors.textPrimary,
+      fontSize: 14,
+      fontWeight: '600',
+      textTransform: 'capitalize',
+      flexShrink: 1,
+      textAlign: 'right',
+    },
+    themeRow: {
+      flexDirection: 'row',
+      gap: 10,
+    },
+    themeOption: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 10,
+      paddingVertical: 12,
+      alignItems: 'center',
+    },
+    themeOptionSelected: {
+      borderColor: colors.accentText,
+      backgroundColor: colors.accentBg,
+    },
+    themeOptionText: {
+      color: colors.textSecondary,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    themeOptionTextSelected: {
+      color: colors.accentText,
+    },
+    switchRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+    },
+    switchText: {
+      flex: 1,
+      gap: 4,
+    },
+    switchHint: {
+      color: colors.textMuted,
+      fontSize: 12,
+      lineHeight: 17,
+    },
+    dangerButton: {
+      marginTop: 8,
+      borderWidth: 1.5,
+      borderColor: colors.dangerBorder,
+      borderRadius: 14,
+      paddingVertical: 14,
+      alignItems: 'center',
+    },
+    dangerButtonText: {
+      color: colors.danger,
+      fontSize: 15,
+      fontWeight: '600',
+    },
+  });
+}

@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../client';
 import { attendanceRecord, streakState } from '../schema';
+import { WeeklySchedule } from '../../types/workout';
 
 export type AttendanceStatus = 'present' | 'absent';
 
@@ -110,4 +111,36 @@ export async function checkIn(workoutSessionId?: number): Promise<void> {
 
 export async function getStreakState() {
   return getOrCreateStreakState();
+}
+
+// A scheduled day that passes with no check-in defaults to "absent" rather
+// than staying blank, so streaks/history reflect misses without requiring
+// the user to explicitly mark them -- they can still edit it to "present"
+// later from the attendance calendar, which corrects history normally.
+// Only ever touches past days (never today, which may still be checked
+// into later) and only scheduled workout days (never rest days).
+export async function backfillMissedAttendance(
+  schedule: WeeklySchedule,
+  programStartedAt: Date,
+): Promise<void> {
+  const existing = await db.select({ date: attendanceRecord.date }).from(attendanceRecord);
+  const existingDates = new Set(existing.map((r) => r.date));
+
+  const cursor = new Date(programStartedAt.getFullYear(), programStartedAt.getMonth(), programStartedAt.getDate());
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(0, 0, 0, 0);
+
+  const toInsert: { date: string; status: 'absent'; checkedInAt: Date }[] = [];
+  while (cursor <= yesterday) {
+    const dateStr = toLocalDateString(cursor);
+    if (schedule[cursor.getDay()] && !existingDates.has(dateStr)) {
+      toInsert.push({ date: dateStr, status: 'absent', checkedInAt: new Date(cursor) });
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  if (toInsert.length === 0) return;
+  await db.insert(attendanceRecord).values(toInsert);
+  await recomputeStreakState();
 }

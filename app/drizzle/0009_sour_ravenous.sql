@@ -1,0 +1,1 @@
+ALTER TABLE `user_profile` ADD `theme_preference` text DEFAULT 'dark' NOT NULL;

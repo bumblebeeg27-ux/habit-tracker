@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LabeledInput } from '../../src/components/LabeledInput';
 import { getActiveWorkoutProgram } from '../../src/db/repositories/workoutProgram';
 import { completeWorkoutSession, getLastLogForExercise, logSet } from '../../src/db/repositories/workoutSession';
+import { useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 import { WorkoutDay } from '../../src/types/workout';
 
 type Phase = 'loading' | 'logging' | 'resting' | 'complete';
@@ -12,6 +14,8 @@ type Phase = 'loading' | 'logging' | 'resting' | 'complete';
 export default function WorkoutSessionScreen() {
   const { sessionId, dayIndex } = useLocalSearchParams<{ sessionId: string; dayIndex: string }>();
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
 
   const [day, setDay] = useState<WorkoutDay | null>(null);
   const [phase, setPhase] = useState<Phase>('loading');
@@ -182,57 +186,59 @@ export default function WorkoutSessionScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-  },
-  centerContent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-    gap: 12,
-  },
-  progress: {
-    color: '#9BA895',
-    fontSize: 13,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#EAFFEF',
-    marginTop: 8,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: '#9BA895',
-    marginTop: 8,
-  },
-  lastTime: {
-    fontSize: 13,
-    color: '#B6FF3C',
-    marginTop: 8,
-  },
-  timer: {
-    fontSize: 64,
-    fontWeight: '700',
-    color: '#B6FF3C',
-  },
-  button: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#0A1400',
-    fontSize: 17,
-    fontWeight: '700',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+    },
+    centerContent: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 24,
+      gap: 12,
+    },
+    progress: {
+      color: colors.textSecondary,
+      fontSize: 13,
+      fontWeight: '600',
+      textTransform: 'uppercase',
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: '700',
+      color: colors.textPrimary,
+      marginTop: 8,
+    },
+    subtitle: {
+      fontSize: 15,
+      color: colors.textSecondary,
+      marginTop: 8,
+    },
+    lastTime: {
+      fontSize: 13,
+      color: colors.accentText,
+      marginTop: 8,
+    },
+    timer: {
+      fontSize: 64,
+      fontWeight: '700',
+      color: colors.accentText,
+    },
+    button: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 14,
+      paddingVertical: 16,
+      alignItems: 'center',
+    },
+    buttonText: {
+      color: colors.onAccent,
+      fontSize: 17,
+      fontWeight: '700',
+    },
+  });
+}

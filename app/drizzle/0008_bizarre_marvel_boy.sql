@@ -1,0 +1,1 @@
+ALTER TABLE `user_profile` ADD `notifications_enabled` integer DEFAULT false NOT NULL;

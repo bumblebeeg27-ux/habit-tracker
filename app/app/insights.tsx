@@ -12,9 +12,13 @@ import {
   ConsistencyInsights,
   WeeklyBreakdown,
 } from '../src/services/insights';
+import { useThemeColors } from '../src/theme/ThemeContext';
+import { ThemeColors } from '../src/theme/colors';
 import { WorkoutProgram } from '../src/types/workout';
 
 export default function InsightsScreen() {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const { data: attendanceRows } = useLiveQuery(db.select().from(attendanceRecord));
   const profile = profiles?.[0];
@@ -105,80 +109,82 @@ export default function InsightsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 16,
-  },
-  centerContent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  emptyText: {
-    color: '#9BA895',
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#B6FF3C',
-  },
-  statValueWarn: {
-    color: '#F87171',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#9BA895',
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  card: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    gap: 10,
-    backgroundColor: '#0A0F0C80',
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  cardBody: {
-    fontSize: 14,
-    color: '#B9C4B2',
-    lineHeight: 21,
-  },
-  highlight: {
-    color: '#B6FF3C',
-    fontWeight: '700',
-  },
-  disclaimer: {
-    fontSize: 12,
-    color: '#7C8A78',
-    marginTop: 4,
-    fontStyle: 'italic',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 16,
+    },
+    centerContent: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 24,
+    },
+    emptyText: {
+      color: colors.textSecondary,
+      fontSize: 14,
+      textAlign: 'center',
+      lineHeight: 20,
+    },
+    statsRow: {
+      flexDirection: 'row',
+      gap: 12,
+    },
+    statCard: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+      alignItems: 'center',
+    },
+    statValue: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.accentText,
+    },
+    statValueWarn: {
+      color: colors.danger,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginTop: 4,
+      textAlign: 'center',
+    },
+    card: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      gap: 10,
+      backgroundColor: colors.card,
+    },
+    cardTitle: {
+      fontSize: 17,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    cardBody: {
+      fontSize: 14,
+      color: colors.tertiary,
+      lineHeight: 21,
+    },
+    highlight: {
+      color: colors.accentText,
+      fontWeight: '700',
+    },
+    disclaimer: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 4,
+      fontStyle: 'italic',
+    },
+  });
+}

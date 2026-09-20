@@ -5,6 +5,7 @@ import { LabeledInput } from '../../src/components/LabeledInput';
 import { OnboardingScreen } from '../../src/components/OnboardingScreen';
 import { OptionPicker } from '../../src/components/OptionPicker';
 import { useOnboardingStore } from '../../src/state/onboardingStore';
+import { useThemeColors } from '../../src/theme/ThemeContext';
 
 const SEX_OPTIONS = [
   { value: 'male', label: 'Male' },
@@ -26,6 +27,7 @@ function ageToDateOfBirth(age: number): string {
 
 export default function BodyStatsScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { draft, update } = useOnboardingStore();
   const [age, setAge] = useState('');
 
@@ -69,7 +71,7 @@ export default function BodyStatsScreen() {
         onChangeText={(text) => update({ weightKg: Number(text) || undefined })}
         containerStyle={{ marginTop: 16 }}
       />
-      <Text style={{ color: '#9BA895', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: colors.textSecondary, marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         DAILY ACTIVITY LEVEL
       </Text>
       <OptionPicker

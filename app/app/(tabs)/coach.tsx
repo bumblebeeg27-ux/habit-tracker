@@ -16,8 +16,12 @@ import { db } from '../../src/db/client';
 import { chatMessage as chatMessageTable, userProfile } from '../../src/db/schema';
 import { addChatMessage, getChatHistory } from '../../src/db/repositories/chatMessage';
 import { sendChatMessage } from '../../src/services/api';
+import { useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 
 export default function CoachScreen() {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const { data: messages } = useLiveQuery(db.select().from(chatMessageTable));
   const profile = profiles?.[0];
@@ -80,12 +84,12 @@ export default function CoachScreen() {
               key={m.id}
               style={[styles.bubble, m.role === 'user' ? styles.userBubble : styles.modelBubble]}
             >
-              <Text style={styles.bubbleText}>{m.content}</Text>
+              <Text style={m.role === 'user' ? styles.userBubbleText : styles.modelBubbleText}>{m.content}</Text>
             </View>
           ))}
           {sending && (
             <View style={[styles.bubble, styles.modelBubble]}>
-              <ActivityIndicator color="#9BA895" />
+              <ActivityIndicator color={colors.textSecondary} />
             </View>
           )}
           {error && <Text style={styles.errorText}>{error}</Text>}
@@ -95,7 +99,7 @@ export default function CoachScreen() {
           <TextInput
             style={styles.input}
             placeholder="Ask your coach…"
-            placeholderTextColor="#7C8A78"
+            placeholderTextColor={colors.textMuted}
             value={input}
             onChangeText={setInput}
             multiline
@@ -113,95 +117,102 @@ export default function CoachScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 8,
-    paddingBottom: 12,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  disclaimer: {
-    fontSize: 12,
-    color: '#7C8A78',
-    marginTop: 4,
-  },
-  messages: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
-    gap: 10,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: '#9BA895',
-    lineHeight: 20,
-    marginTop: 24,
-  },
-  bubble: {
-    maxWidth: '85%',
-    borderRadius: 14,
-    padding: 12,
-  },
-  userBubble: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#B6FF3C',
-  },
-  modelBubble: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#0A0F0C80',
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-  },
-  bubbleText: {
-    fontSize: 15,
-    lineHeight: 21,
-    color: '#EAFFEF',
-  },
-  errorText: {
-    color: '#F87171',
-    fontSize: 13,
-    marginTop: 4,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 10,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#1C2318',
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    color: '#EAFFEF',
-    fontSize: 15,
-    maxHeight: 100,
-    backgroundColor: '#0A0F0C80',
-  },
-  sendButton: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  sendButtonDisabled: {
-    opacity: 0.4,
-  },
-  sendButtonText: {
-    color: '#0A1400',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    header: {
+      paddingHorizontal: 24,
+      paddingTop: 8,
+      paddingBottom: 12,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    disclaimer: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 4,
+    },
+    messages: {
+      paddingHorizontal: 24,
+      paddingBottom: 16,
+      gap: 10,
+    },
+    emptyText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+      marginTop: 24,
+    },
+    bubble: {
+      maxWidth: '85%',
+      borderRadius: 14,
+      padding: 12,
+    },
+    userBubble: {
+      alignSelf: 'flex-end',
+      backgroundColor: colors.accentFill,
+    },
+    modelBubble: {
+      alignSelf: 'flex-start',
+      backgroundColor: colors.card,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+    },
+    userBubbleText: {
+      fontSize: 15,
+      lineHeight: 21,
+      color: colors.onAccent,
+    },
+    modelBubbleText: {
+      fontSize: 15,
+      lineHeight: 21,
+      color: colors.textPrimary,
+    },
+    errorText: {
+      color: colors.danger,
+      fontSize: 13,
+      marginTop: 4,
+    },
+    inputRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      gap: 10,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    input: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+      color: colors.textPrimary,
+      fontSize: 15,
+      maxHeight: 100,
+      backgroundColor: colors.card,
+    },
+    sendButton: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+    },
+    sendButtonDisabled: {
+      opacity: 0.4,
+    },
+    sendButtonText: {
+      color: colors.onAccent,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+  });
+}

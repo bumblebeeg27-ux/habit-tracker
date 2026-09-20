@@ -35,7 +35,13 @@
       "expo-status-bar",
       "expo-sqlite",
       "expo-notifications",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "FitCoach AI needs access to your photos so you can attach your own picture to a workout."
+        }
+      ]
     ],
     "extra": {
       "router": {},

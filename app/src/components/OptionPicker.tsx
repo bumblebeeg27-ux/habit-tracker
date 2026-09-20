@@ -1,4 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useThemeColors } from '../theme/ThemeContext';
+import { ThemeColors } from '../theme/colors';
 
 export function OptionPicker<T extends string>({
   options,
@@ -9,6 +11,8 @@ export function OptionPicker<T extends string>({
   value: T | undefined;
   onChange: (value: T) => void;
 }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <View style={styles.container}>
       {options.map((option) => {
@@ -32,32 +36,34 @@ export function OptionPicker<T extends string>({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    gap: 12,
-  },
-  option: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-  },
-  optionSelected: {
-    borderColor: '#B6FF3C',
-    backgroundColor: '#1A2A0F',
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#EAFFEF',
-  },
-  labelSelected: {
-    color: '#CFFF7A',
-  },
-  description: {
-    fontSize: 13,
-    color: '#9BA895',
-    marginTop: 4,
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      gap: 12,
+    },
+    option: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+    },
+    optionSelected: {
+      borderColor: colors.accentText,
+      backgroundColor: colors.accentBg,
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.textPrimary,
+    },
+    labelSelected: {
+      color: colors.accentLight,
+    },
+    description: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+  });
+}

@@ -4,6 +4,9 @@ export type Exercise = {
   reps: string;
   restSec: number;
   notes?: string;
+  // User-attached media, shown in place of the auto-matched reference image.
+  customImageUri?: string;
+  customVideoUrl?: string;
 };
 
 export type WorkoutDay = {

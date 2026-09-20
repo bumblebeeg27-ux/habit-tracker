@@ -9,6 +9,8 @@ import m0004 from './0004_volatile_epoch.sql';
 import m0005 from './0005_same_silk_fever.sql';
 import m0006 from './0006_abandoned_elektra.sql';
 import m0007 from './0007_medical_nemesis.sql';
+import m0008 from './0008_bizarre_marvel_boy.sql';
+import m0009 from './0009_sour_ravenous.sql';
 
   export default {
     journal,
@@ -20,7 +22,9 @@ m0003,
 m0004,
 m0005,
 m0006,
-m0007
+m0007,
+m0008,
+m0009
     }
   }
   

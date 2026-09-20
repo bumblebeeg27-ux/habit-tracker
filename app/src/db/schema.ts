@@ -27,6 +27,8 @@ export const userProfile = sqliteTable('user_profile', {
     enum: ['none', 'vegetarian', 'vegan', 'pescatarian', 'other'],
   }).notNull(),
   allergies: text('allergies'),
+  notificationsEnabled: integer('notifications_enabled', { mode: 'boolean' }).notNull().default(false),
+  themePreference: text('theme_preference', { enum: ['light', 'dark'] }).notNull().default('dark'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });

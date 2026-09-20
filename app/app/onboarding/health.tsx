@@ -4,6 +4,7 @@ import { LabeledInput } from '../../src/components/LabeledInput';
 import { OnboardingScreen } from '../../src/components/OnboardingScreen';
 import { OptionPicker } from '../../src/components/OptionPicker';
 import { useOnboardingStore } from '../../src/state/onboardingStore';
+import { useThemeColors } from '../../src/theme/ThemeContext';
 
 const DIET_OPTIONS = [
   { value: 'none', label: 'No restrictions' },
@@ -15,6 +16,7 @@ const DIET_OPTIONS = [
 
 export default function HealthScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
   const { draft, update } = useOnboardingStore();
 
   return (
@@ -33,7 +35,7 @@ export default function HealthScreen() {
         onChangeText={(injuries) => update({ injuries })}
         multiline
       />
-      <Text style={{ color: '#9BA895', marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
+      <Text style={{ color: colors.textSecondary, marginTop: 20, marginBottom: 4, fontSize: 13, fontWeight: '600' }}>
         DIETARY PREFERENCE
       </Text>
       <OptionPicker

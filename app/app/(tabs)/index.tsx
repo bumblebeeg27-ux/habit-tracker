@@ -20,6 +20,7 @@ import { db } from '../../src/db/client';
 import { attendanceRecord, streakState, userProfile, workoutProgram as workoutProgramTable } from '../../src/db/schema';
 import {
   addExercise,
+  getActiveProgramRow,
   getActiveWorkoutProgram,
   getWeeklySchedule,
   removeExercise,
@@ -28,15 +29,19 @@ import {
   updateExercise,
 } from '../../src/db/repositories/workoutProgram';
 import { startWorkoutSession } from '../../src/db/repositories/workoutSession';
-import { checkIn, todayDateString } from '../../src/db/repositories/attendance';
+import { backfillMissedAttendance, checkIn, todayDateString } from '../../src/db/repositories/attendance';
 import { fetchWorkoutProgram } from '../../src/services/api';
 import { setupNotifications, rescheduleStreakRiskNudge } from '../../src/services/notifications';
+import { useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 import { WeeklySchedule, WorkoutProgram } from '../../src/types/workout';
 
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export default function TodayScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const { data: programRows } = useLiveQuery(db.select().from(workoutProgramTable));
   const { data: attendanceRows } = useLiveQuery(db.select().from(attendanceRecord));
@@ -58,7 +63,14 @@ export default function TodayScreen() {
   useEffect(() => {
     if (hasActiveProgram) {
       getActiveWorkoutProgram().then(setProgram);
-      getWeeklySchedule().then(setSchedule);
+      getWeeklySchedule().then((sched) => {
+        setSchedule(sched);
+        if (sched) {
+          getActiveProgramRow().then((row) => {
+            if (row) backfillMissedAttendance(sched, new Date(row.createdAt));
+          });
+        }
+      });
     } else {
       setProgram(null);
       setSchedule(null);
@@ -66,9 +78,9 @@ export default function TodayScreen() {
   }, [programRows]);
 
   useEffect(() => {
-    if (profile) setupNotifications(checkedInToday);
+    if (profile) setupNotifications(profile, checkedInToday);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!!profile]);
+  }, [!!profile, profile?.notificationsEnabled]);
 
   useEffect(() => {
     if (profile) rescheduleStreakRiskNudge(checkedInToday);
@@ -168,7 +180,7 @@ export default function TodayScreen() {
 
         {loading && (
           <View style={styles.card}>
-            <ActivityIndicator color="#B6FF3C" />
+            <ActivityIndicator color={colors.accentText} />
             <Text style={[styles.cardSubtitle, styles.loadingText]}>Building your program…</Text>
           </View>
         )}
@@ -273,173 +285,175 @@ export default function TodayScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 16,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  streakCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-  },
-  streakInfo: {
-    flexShrink: 1,
-  },
-  streakValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  streakLabel: {
-    fontSize: 13,
-    color: '#9BA895',
-    marginTop: 2,
-  },
-  calendarLink: {
-    fontSize: 12,
-    color: '#B6FF3C',
-    marginTop: 6,
-    fontWeight: '600',
-  },
-  checkInButton: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-  },
-  checkInButtonText: {
-    color: '#0A1400',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  checkedInBadge: {
-    borderWidth: 1.5,
-    borderColor: '#B6FF3C',
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-  },
-  checkedInBadgeText: {
-    color: '#B6FF3C',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  card: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    gap: 8,
-    backgroundColor: '#0A0F0C80',
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: '#9BA895',
-    lineHeight: 20,
-  },
-  loadingText: {
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.4,
-  },
-  buttonText: {
-    color: '#0A1400',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  errorText: {
-    color: '#F87171',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  weekHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  weekTitle: {
-    color: '#9BA895',
-    fontSize: 13,
-  },
-  editScheduleLink: {
-    color: '#B6FF3C',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  editScheduleHint: {
-    color: '#7C8A78',
-    fontSize: 12,
-    paddingHorizontal: 4,
-    marginTop: -8,
-  },
-  weekdayRow: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  weekdayChip: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-  },
-  weekdayChipSelected: {
-    backgroundColor: '#1A2A0F',
-    borderColor: '#B6FF3C',
-  },
-  weekdayChipToday: {
-    borderColor: '#B6FF3C',
-  },
-  weekdayChipEditing: {
-    borderStyle: 'dashed',
-  },
-  weekdayLabel: {
-    color: '#9BA895',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  weekdayValue: {
-    color: '#EAFFEF',
-    fontSize: 11,
-    marginTop: 4,
-  },
-  weekdayEditIcon: {
-    color: '#7C8A78',
-    fontSize: 10,
-    marginTop: 3,
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 16,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    streakCard: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+    },
+    streakInfo: {
+      flexShrink: 1,
+    },
+    streakValue: {
+      fontSize: 22,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    streakLabel: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    calendarLink: {
+      fontSize: 12,
+      color: colors.accentText,
+      marginTop: 6,
+      fontWeight: '600',
+    },
+    checkInButton: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 18,
+    },
+    checkInButtonText: {
+      color: colors.onAccent,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    checkedInBadge: {
+      borderWidth: 1.5,
+      borderColor: colors.accentText,
+      borderRadius: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 14,
+    },
+    checkedInBadgeText: {
+      color: colors.accentText,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    card: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      gap: 8,
+      backgroundColor: colors.card,
+    },
+    cardTitle: {
+      fontSize: 17,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    cardSubtitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+    },
+    loadingText: {
+      textAlign: 'center',
+    },
+    button: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    buttonDisabled: {
+      opacity: 0.4,
+    },
+    buttonText: {
+      color: colors.onAccent,
+      fontSize: 15,
+      fontWeight: '700',
+    },
+    errorText: {
+      color: colors.danger,
+      fontSize: 14,
+      lineHeight: 20,
+    },
+    weekHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 4,
+    },
+    headerActions: {
+      flexDirection: 'row',
+      gap: 16,
+    },
+    weekTitle: {
+      color: colors.textSecondary,
+      fontSize: 13,
+    },
+    editScheduleLink: {
+      color: colors.accentText,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    editScheduleHint: {
+      color: colors.textMuted,
+      fontSize: 12,
+      paddingHorizontal: 4,
+      marginTop: -8,
+    },
+    weekdayRow: {
+      flexDirection: 'row',
+      gap: 6,
+    },
+    weekdayChip: {
+      flex: 1,
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderRadius: 10,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+    },
+    weekdayChipSelected: {
+      backgroundColor: colors.accentBg,
+      borderColor: colors.accentText,
+    },
+    weekdayChipToday: {
+      borderColor: colors.accentText,
+    },
+    weekdayChipEditing: {
+      borderStyle: 'dashed',
+    },
+    weekdayLabel: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      fontWeight: '600',
+    },
+    weekdayValue: {
+      color: colors.textPrimary,
+      fontSize: 11,
+      marginTop: 4,
+    },
+    weekdayEditIcon: {
+      color: colors.textMuted,
+      fontSize: 10,
+      marginTop: 3,
+    },
+  });
+}

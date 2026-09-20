@@ -4,6 +4,8 @@ import { LabeledInput } from '../../src/components/LabeledInput';
 import { OnboardingScreen } from '../../src/components/OnboardingScreen';
 import { createUserProfile, ProfileDraft } from '../../src/db/repositories/userProfile';
 import { useOnboardingStore } from '../../src/state/onboardingStore';
+import { useThemeColors } from '../../src/theme/ThemeContext';
+import { ThemeColors } from '../../src/theme/colors';
 
 const REQUIRED_FIELDS: (keyof ProfileDraft)[] = [
   'sex',
@@ -20,6 +22,8 @@ const REQUIRED_FIELDS: (keyof ProfileDraft)[] = [
 ];
 
 export default function SummaryScreen() {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { draft, update, reset } = useOnboardingStore();
   const [saving, setSaving] = useState(false);
 
@@ -63,7 +67,7 @@ export default function SummaryScreen() {
       </View>
       <Text style={styles.consent}>
         To build your workout and diet plans, your profile (goals, body stats, injuries, and diet
-        preferences) is sent to our server and to Anthropic's Claude API for plan generation. It is
+        preferences) is sent to our server and to Google's Gemini API for plan generation. It is
         never sold or used for advertising. You can clear all your data anytime from Profile.
       </Text>
     </OnboardingScreen>
@@ -71,6 +75,8 @@ export default function SummaryScreen() {
 }
 
 function SummaryRow({ label, value }: { label: string; value?: string }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <View style={styles.row}>
       <Text style={styles.rowLabel}>{label}</Text>
@@ -79,33 +85,35 @@ function SummaryRow({ label, value }: { label: string; value?: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  summaryCard: {
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    gap: 12,
-    backgroundColor: '#0A0F0C80',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  rowLabel: {
-    color: '#9BA895',
-    fontSize: 14,
-  },
-  rowValue: {
-    color: '#EAFFEF',
-    fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  consent: {
-    color: '#7C8A78',
-    fontSize: 12,
-    lineHeight: 17,
-    marginTop: 20,
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    summaryCard: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      gap: 12,
+      backgroundColor: colors.card,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    rowLabel: {
+      color: colors.textSecondary,
+      fontSize: 14,
+    },
+    rowValue: {
+      color: colors.textPrimary,
+      fontSize: 14,
+      fontWeight: '600',
+      textTransform: 'capitalize',
+    },
+    consent: {
+      color: colors.textMuted,
+      fontSize: 12,
+      lineHeight: 17,
+      marginTop: 20,
+    },
+  });
+}

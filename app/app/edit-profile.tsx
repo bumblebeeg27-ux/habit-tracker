@@ -8,6 +8,8 @@ import { OptionPicker } from '../src/components/OptionPicker';
 import { db } from '../src/db/client';
 import { updateUserProfile, ProfileDraft } from '../src/db/repositories/userProfile';
 import { userProfile } from '../src/db/schema';
+import { useThemeColors } from '../src/theme/ThemeContext';
+import { ThemeColors } from '../src/theme/colors';
 
 const GOAL_OPTIONS = [
   { value: 'fat_loss', label: 'Lose fat' },
@@ -60,6 +62,8 @@ function ageToDateOfBirth(age: number): string {
 
 export default function EditProfileScreen() {
   const router = useRouter();
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const { data: profiles } = useLiveQuery(db.select().from(userProfile));
   const profile = profiles?.[0];
 
@@ -198,6 +202,8 @@ export default function EditProfileScreen() {
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -206,38 +212,40 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 24,
-  },
-  section: {
-    gap: 10,
-  },
-  sectionTitle: {
-    color: '#EAFFEF',
-    fontSize: 17,
-    fontWeight: '700',
-  },
-  subLabel: {
-    color: '#9BA895',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  saveButton: {
-    backgroundColor: '#B6FF3C',
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  saveButtonText: {
-    color: '#0A1400',
-    fontSize: 17,
-    fontWeight: '700',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 24,
+    },
+    section: {
+      gap: 10,
+    },
+    sectionTitle: {
+      color: colors.textPrimary,
+      fontSize: 17,
+      fontWeight: '700',
+    },
+    subLabel: {
+      color: colors.textSecondary,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    saveButton: {
+      backgroundColor: colors.accentFill,
+      borderRadius: 14,
+      paddingVertical: 16,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    saveButtonText: {
+      color: colors.onAccent,
+      fontSize: 17,
+      fontWeight: '700',
+    },
+  });
+}

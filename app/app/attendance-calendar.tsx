@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { db } from '../src/db/client';
 import { attendanceRecord, streakState } from '../src/db/schema';
 import { AttendanceStatus, setAttendanceStatus, toLocalDateString } from '../src/db/repositories/attendance';
+import { useThemeColors } from '../src/theme/ThemeContext';
+import { ThemeColors } from '../src/theme/colors';
 
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const MONTH_NAMES = [
@@ -31,6 +33,8 @@ function nextStatus(current: AttendanceStatus | undefined): AttendanceStatus | n
 }
 
 export default function AttendanceCalendarScreen() {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   const [monthCursor, setMonthCursor] = useState(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -138,133 +142,135 @@ export default function AttendanceCalendarScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#05070A',
-  },
-  content: {
-    padding: 24,
-    gap: 16,
-  },
-  streakCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 16,
-    backgroundColor: '#0A0F0C80',
-  },
-  streakValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  streakLabel: {
-    fontSize: 13,
-    color: '#9BA895',
-    marginTop: 2,
-  },
-  legend: {
-    gap: 4,
-  },
-  legendRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  legendTick: {
-    color: '#B6FF3C',
-    fontWeight: '700',
-  },
-  legendCross: {
-    color: '#F87171',
-    fontWeight: '700',
-  },
-  legendText: {
-    color: '#9BA895',
-    fontSize: 12,
-  },
-  monthNav: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  navButton: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-  },
-  navButtonText: {
-    color: '#EAFFEF',
-    fontSize: 20,
-  },
-  monthLabel: {
-    color: '#EAFFEF',
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  weekdayRow: {
-    flexDirection: 'row',
-  },
-  weekdayLabel: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#7C8A78',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  dayCell: {
-    width: '14.28%',
-    aspectRatio: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginVertical: 2,
-  },
-  dayCellToday: {
-    borderWidth: 1.5,
-    borderColor: '#B6FF3C',
-  },
-  dayCellPresent: {
-    backgroundColor: '#1A2A0F',
-  },
-  dayCellAbsent: {
-    backgroundColor: '#3A1414',
-  },
-  dayNumber: {
-    color: '#EAFFEF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  dayNumberFuture: {
-    color: '#2A3324',
-  },
-  dayMarkPresent: {
-    color: '#B6FF3C',
-    fontSize: 12,
-    fontWeight: '700',
-    marginTop: 1,
-  },
-  dayMarkAbsent: {
-    color: '#F87171',
-    fontSize: 12,
-    fontWeight: '700',
-    marginTop: 1,
-  },
-  hint: {
-    color: '#7C8A78',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    content: {
+      padding: 24,
+      gap: 16,
+    },
+    streakCard: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 16,
+      backgroundColor: colors.card,
+    },
+    streakValue: {
+      fontSize: 22,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    streakLabel: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    legend: {
+      gap: 4,
+    },
+    legendRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    legendTick: {
+      color: colors.accentText,
+      fontWeight: '700',
+    },
+    legendCross: {
+      color: colors.danger,
+      fontWeight: '700',
+    },
+    legendText: {
+      color: colors.textSecondary,
+      fontSize: 12,
+    },
+    monthNav: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    navButton: {
+      width: 40,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 10,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+    },
+    navButtonText: {
+      color: colors.textPrimary,
+      fontSize: 20,
+    },
+    monthLabel: {
+      color: colors.textPrimary,
+      fontSize: 18,
+      fontWeight: '700',
+    },
+    weekdayRow: {
+      flexDirection: 'row',
+    },
+    weekdayLabel: {
+      flex: 1,
+      textAlign: 'center',
+      color: colors.textMuted,
+      fontSize: 12,
+      fontWeight: '600',
+    },
+    grid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    dayCell: {
+      width: '14.28%',
+      aspectRatio: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 10,
+      marginVertical: 2,
+    },
+    dayCellToday: {
+      borderWidth: 1.5,
+      borderColor: colors.accentText,
+    },
+    dayCellPresent: {
+      backgroundColor: colors.accentBg,
+    },
+    dayCellAbsent: {
+      backgroundColor: colors.dangerBg,
+    },
+    dayNumber: {
+      color: colors.textPrimary,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    dayNumberFuture: {
+      color: colors.border,
+    },
+    dayMarkPresent: {
+      color: colors.accentText,
+      fontSize: 12,
+      fontWeight: '700',
+      marginTop: 1,
+    },
+    dayMarkAbsent: {
+      color: colors.danger,
+      fontSize: 12,
+      fontWeight: '700',
+      marginTop: 1,
+    },
+    hint: {
+      color: colors.textMuted,
+      fontSize: 12,
+      textAlign: 'center',
+    },
+  });
+}

@@ -1,4 +1,6 @@
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useThemeColors } from '../theme/ThemeContext';
+import { ThemeColors } from '../theme/colors';
 import { WorkoutProgram } from '../types/workout';
 
 const FULL_WEEKDAY_NAMES = [
@@ -20,6 +22,8 @@ export function DayPickerModal({
   onSelect: (dayIndex: number | null) => void;
   onClose: () => void;
 }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
@@ -69,6 +73,8 @@ function Option({
   selected: boolean;
   onPress: () => void;
 }) {
+  const colors = useThemeColors();
+  const styles = createStyles(colors);
   return (
     <Pressable style={[styles.option, selected && styles.optionSelected]} onPress={onPress}>
       <View style={styles.optionText}>
@@ -80,82 +86,84 @@ function Option({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    backgroundColor: '#0A0F0C',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 10,
-    paddingHorizontal: 20,
-    paddingBottom: 32,
-    maxHeight: '75%',
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#2A3324',
-    alignSelf: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#EAFFEF',
-    marginBottom: 12,
-  },
-  list: {
-    maxHeight: 380,
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1.5,
-    borderColor: '#1C2318',
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 10,
-  },
-  optionSelected: {
-    borderColor: '#B6FF3C',
-    backgroundColor: '#1A2A0F',
-  },
-  optionText: {
-    flexShrink: 1,
-  },
-  optionLabel: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#EAFFEF',
-  },
-  optionLabelSelected: {
-    color: '#CFFF7A',
-  },
-  optionSubtitle: {
-    fontSize: 13,
-    color: '#9BA895',
-    marginTop: 2,
-  },
-  checkmark: {
-    color: '#B6FF3C',
-    fontSize: 18,
-    fontWeight: '700',
-    marginLeft: 12,
-  },
-  cancelButton: {
-    marginTop: 4,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#9BA895',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-});
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      justifyContent: 'flex-end',
+    },
+    sheet: {
+      backgroundColor: colors.cardSolid,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingTop: 10,
+      paddingHorizontal: 20,
+      paddingBottom: 32,
+      maxHeight: '75%',
+    },
+    handle: {
+      width: 40,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: colors.border,
+      alignSelf: 'center',
+      marginBottom: 16,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: colors.textPrimary,
+      marginBottom: 12,
+    },
+    list: {
+      maxHeight: 380,
+    },
+    option: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 14,
+      padding: 14,
+      marginBottom: 10,
+    },
+    optionSelected: {
+      borderColor: colors.accentText,
+      backgroundColor: colors.accentBg,
+    },
+    optionText: {
+      flexShrink: 1,
+    },
+    optionLabel: {
+      fontSize: 15,
+      fontWeight: '700',
+      color: colors.textPrimary,
+    },
+    optionLabelSelected: {
+      color: colors.accentLight,
+    },
+    optionSubtitle: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    checkmark: {
+      color: colors.accentText,
+      fontSize: 18,
+      fontWeight: '700',
+      marginLeft: 12,
+    },
+    cancelButton: {
+      marginTop: 4,
+      paddingVertical: 14,
+      alignItems: 'center',
+    },
+    cancelButtonText: {
+      color: colors.textSecondary,
+      fontSize: 15,
+      fontWeight: '600',
+    },
+  });
+}

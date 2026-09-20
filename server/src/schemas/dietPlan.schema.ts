@@ -5,6 +5,9 @@ export const mealSchema = z.object({
   name: z.string(), // e.g. "Breakfast"
   items: z.array(z.string()).min(1).max(10),
   approxCalories: z.number().int().min(0).max(3000),
+  // 24-hour "HH:mm", e.g. "07:30" -- when the client should eat this meal.
+  // Used to schedule the on-device reminder for it.
+  timeOfDay: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
 });
 
 export const dietPlanSchema = z.object({
@@ -45,8 +48,13 @@ export const dietPlanToolSchema = {
             items: { type: 'string' },
           },
           approxCalories: { type: 'integer', minimum: 0, maximum: 3000 },
+          timeOfDay: {
+            type: 'string',
+            pattern: '^([01][0-9]|2[0-3]):[0-5][0-9]$',
+            description: '24-hour "HH:mm" the client should eat this meal, e.g. "07:30"',
+          },
         },
-        required: ['name', 'items', 'approxCalories'],
+        required: ['name', 'items', 'approxCalories', 'timeOfDay'],
       },
     },
   },

@@ -96,6 +96,10 @@ Hard constraints, always respect them:
 - Hit the daily calorie target given to you almost exactly (within ~50 calories) -- it was
   computed with a standard formula and is not yours to override.
 - Keep protein reasonably high relative to calories to support their training goal.
+- Give every meal a realistic timeOfDay (24-hour "HH:mm") spread sensibly across the client's
+  waking hours -- e.g. breakfast in the morning, lunch around midday, dinner in the evening, and
+  any snacks spaced between meals rather than clustered together. This time is used to schedule
+  a reminder, so it needs to reflect when a person would actually eat that meal.
 You are not a doctor or registered dietitian. Do not diagnose conditions, recommend supplements,
 or give medical advice -- if their goal implies a medical concern, keep the plan general.`;
 
@@ -113,7 +117,8 @@ Daily calorie target (computed, do not change): ${targetCalories} kcal.
 Design meals appropriate for a "${profile.dietaryPreference.replace(/_/g, ' ')}" diet
 ${profile.allergies ? `, strictly avoiding: ${profile.allergies}` : ''},
 supporting their "${profile.goal.replace(/_/g, ' ')}" goal. Use simple, realistic meals and
-everyday ingredients -- this is a template to follow, not a recipe book.`;
+everyday ingredients -- this is a template to follow, not a recipe book. Assign each meal a
+timeOfDay so the client can be reminded to eat it at the right time.`;
 
   return { system, userMessage };
 }
